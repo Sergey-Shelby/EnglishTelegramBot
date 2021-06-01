@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EnglishTelegramBot.Common.Abstractions.Repositories
+namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
 	interface IBaseRepository<T> : IDisposable where T : class
 	{
