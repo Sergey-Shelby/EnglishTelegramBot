@@ -16,12 +16,12 @@ namespace EnglishTelegramBot.Database.Repositories
             this.db = new EnglishContext();
         }
 
-        public IEnumerable<PartOfSpeech> GetPartOfSpeechList()
+        public IEnumerable<PartOfSpeech> FetchAll()
         {
             return db.PartsOfSpeech;
         }
 
-        public PartOfSpeech GetPartOfSpeech(int id)
+        public PartOfSpeech FetchById(int id)
         {
             return db.PartsOfSpeech.Find(id);
         }

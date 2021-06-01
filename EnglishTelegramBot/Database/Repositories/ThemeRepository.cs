@@ -16,12 +16,12 @@ namespace EnglishTelegramBot.Database.Repositories
             this.db = new EnglishContext();
         }
 
-        public IEnumerable<Theme> GetThemeList()
+        public IEnumerable<Theme> FetchAll()
         {
             return db.Themes;
         }
 
-        public Theme GetTheme(int id)
+        public Theme FetchById(int id)
         {
             return db.Themes.Find(id);
         }

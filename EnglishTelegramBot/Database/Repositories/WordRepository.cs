@@ -16,12 +16,12 @@ namespace EnglishTelegramBot.Database.Repositories
             this.db = new EnglishContext();
         }
 
-        public IEnumerable<Word> GetWordList()
+        public IEnumerable<Word> FetchAll()
         {
             return db.Words;
         }
 
-        public Word GetWord(int id) 
+        public Word FetchById(int id) 
         {
             return db.Words.Find(id);
         }
