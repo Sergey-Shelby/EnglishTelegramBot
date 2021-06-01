@@ -7,65 +7,8 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	public class PartOfSpeechRepository : IPartOfSpeechRepository<PartOfSpeech>
+	public class PartOfSpeechRepository : BaseRepository<PartOfSpeech>
     {
-        private EnglishContext db;
 
-        public PartOfSpeechRepository()
-        {
-            this.db = new EnglishContext();
-        }
-
-        public IEnumerable<PartOfSpeech> FetchAll()
-        {
-            return db.PartsOfSpeech;
-        }
-
-        public PartOfSpeech FetchById(int id)
-        {
-            return db.PartsOfSpeech.Find(id);
-        }
-
-        public void Create(PartOfSpeech partOfSpeech)
-        {
-            db.PartsOfSpeech.Add(partOfSpeech);
-        }
-
-        public void Update(PartOfSpeech partOfSpeech)
-        {
-            db.Entry(partOfSpeech).State = EntityState.Modified;
-        }
-
-        public void Delete(int id)
-        {
-            PartOfSpeech partOfSpeech = db.PartsOfSpeech.Find(id);
-            if (partOfSpeech != null)
-                db.PartsOfSpeech.Remove(partOfSpeech);
-        }
-
-        public void Save()
-        {
-            db.SaveChanges();
-        }
-
-        private bool disposed = false;
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    db.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 	}
 }
