@@ -7,7 +7,11 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	public class WordRepository : BaseRepository<Word>
+	public class WordRepository : BaseRepository<Word>, IWordRepository<Word>
 	{
-    }
+		public WordRepository() : base(new EnglishContext())
+		{
+
+		}
+	}
 }

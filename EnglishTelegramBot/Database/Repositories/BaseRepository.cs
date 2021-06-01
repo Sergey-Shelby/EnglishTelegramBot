@@ -8,40 +8,43 @@ using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+	public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private EnglishContext db;
+        private DbSet<T> dbSet;
 
-        public BaseRepository()
+        public BaseRepository(EnglishContext dbContext)
         {
-            this.db = new EnglishContext();
+            this.db = dbContext;
+            this.dbSet = db.Set<T>();
         }
 
         public IEnumerable<T> FetchAll()
         {
-            return db.Set<T>();
+            return dbSet.AsNoTracking();
         }
 
         public T FetchById(int id)
         {
-            return db.Set<T>().Find(id);
+            return dbSet.Find(id);
         }
 
         public void Create(T t)
         {
-            db.Set<T>().Add(t);
+            dbSet.Add(t);
         }
 
         public void Update(T t)
         {
+            db.Attach(t);
             db.Entry(t).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            T t = db.Set<T>().Find(id);
+            T t = dbSet.Find(id);
             if (t != null)
-                db.Set<T>().Remove(t);
+                dbSet.Remove(t);
         }
 
         public void Save()

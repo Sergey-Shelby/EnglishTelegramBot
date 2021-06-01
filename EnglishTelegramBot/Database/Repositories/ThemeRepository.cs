@@ -7,8 +7,11 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	public class ThemeRepository : BaseRepository<Theme>
+	public class ThemeRepository : BaseRepository<Theme>, IThemeRepository<Theme>
     {
+		public ThemeRepository() : base(new EnglishContext())
+		{
 
+		}
 	}
 }

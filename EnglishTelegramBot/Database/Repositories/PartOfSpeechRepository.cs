@@ -7,8 +7,11 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	public class PartOfSpeechRepository : BaseRepository<PartOfSpeech>
+	public class PartOfSpeechRepository : BaseRepository<PartOfSpeech>, IPartOfSpeechRepository<PartOfSpeech>
     {
+		public PartOfSpeechRepository() : base(new EnglishContext())
+		{
 
+		}
 	}
 }
