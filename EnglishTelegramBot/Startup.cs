@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnglishTelegramBot.Common.Abstractions.Repositories;
+using EnglishTelegramBot.Database.Repositories;
+using EnglishTelegramBot.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,12 +33,11 @@ namespace EnglishTelegramBot
 			}
 
 			app.UseRouting();
-
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapGet("/", async context =>
 				{
-					await context.Response.WriteAsync("Hello Telgram Bot!");
+					await context.Response.WriteAsync($"Hello Telgram Bot! {new WordRepository().GetWord(1).English}");
 				});
 			});
 
