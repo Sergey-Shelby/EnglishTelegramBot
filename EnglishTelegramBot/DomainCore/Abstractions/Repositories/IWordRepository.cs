@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
-    interface IWordRepository : IBaseRepository<Word>
+    public interface IWordRepository : IBaseRepository<Word>
     {
 
     }

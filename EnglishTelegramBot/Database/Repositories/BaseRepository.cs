@@ -1,5 +1,5 @@
-﻿using EnglishTelegramBot.Common.Abstractions.Repositories;
-using EnglishTelegramBot.Database.Common;
+﻿using EnglishTelegramBot.Database.Common;
+using EnglishTelegramBot.DomainCore.Abstractions.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

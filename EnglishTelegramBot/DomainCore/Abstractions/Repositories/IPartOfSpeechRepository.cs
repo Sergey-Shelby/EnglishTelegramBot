@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
-	interface IPartOfSpeechRepository: IBaseRepository<PartOfSpeech>
+	public interface IPartOfSpeechRepository: IBaseRepository<PartOfSpeech>
 	{
 
 	}
