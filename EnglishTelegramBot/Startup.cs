@@ -1,16 +1,17 @@
-using EnglishTelegramBot.TelegrafBot;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using Telegraf.Net;
+using Telegraf.Net.Commands;
 using Telegram.Bot.Types;
 
 namespace EnglishTelegramBot
 {
 	public class Startup
 	{
-		private Telegraf _client;
+		private TelegrafClient _client;
 
 		public void ConfigureServices(IServiceCollection services) {}
 
@@ -25,17 +26,13 @@ namespace EnglishTelegramBot
 				});
 			});
 
-			_client = new Telegraf("1874538705:AAEBcO4PJL_MPUHOS1tkF9XPDee7WbMC7nc");
+			_client = new TelegrafClient("1874538705:AAEBcO4PJL_MPUHOS1tkF9XPDee7WbMC7nc");
 
 			_client.Hears<HelpCommand>("help only full");
 			_client.Hears<HelpCommand>("help part", isFullEqual: false);
 			_client.Hears<StartCommand>("start");
 
-			_client.StartReceining((TelegrafContext context, Message message) => 
-			{
-				context.Reply($"Your message: {message.Text}");
-				return Task.CompletedTask; 
-			});
+			_client.StartReceining();
 		}
 
 		public class HelpCommand : BaseCommand

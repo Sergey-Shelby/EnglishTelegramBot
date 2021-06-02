@@ -1,6 +1,5 @@
-﻿using EnglishTelegramBot.Models;
-using System;
-using System.Collections.Generic;
+﻿
+using EnglishTelegramBot.DomainCore.Entities;
 
 namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {

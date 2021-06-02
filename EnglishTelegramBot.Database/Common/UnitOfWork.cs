@@ -1,9 +1,6 @@
 ﻿using EnglishTelegramBot.Database.Repositories;
 using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Abstractions.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Database.Common
@@ -13,8 +10,9 @@ namespace EnglishTelegramBot.Database.Common
 		private readonly EnglishContext _englishContext;
 		public UnitOfWork(EnglishContext englishContext)
 		{
-			this._englishContext = englishContext;
+			_englishContext = englishContext;
 		}
+
 		private IWordRepository _lazyWorkRepository;
 		private IThemeRepository _lazyThemeRepository;
 		private IPartOfSpeechRepository _lazyPartOfSpeechRepository;

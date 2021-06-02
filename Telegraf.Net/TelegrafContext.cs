@@ -2,7 +2,7 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace EnglishTelegramBot.TelegrafBot
+namespace Telegraf.Net
 {
     public class TelegrafContext
     {
