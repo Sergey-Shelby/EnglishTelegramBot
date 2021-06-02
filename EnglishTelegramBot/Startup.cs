@@ -1,19 +1,32 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Telegraf.Net;
+using Telegraf.Net.Abstractions;
 using Telegraf.Net.Commands;
-using Telegram.Bot.Types;
+using Telegraf.Net.Extensions;
+using Telegraf.Net.Helpers;
 
 namespace EnglishTelegramBot
 {
 	public class Startup
-	{
-		private TelegrafClient _client;
+	{ 
+		private IConfiguration _configuration { get; }
 
-		public void ConfigureServices(IServiceCollection services) {}
+		public Startup(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
+
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.Configure<BotOptions>(_configuration.GetSection("BotOptions"));
+			services.AddScoped<HelpCommand>();
+			services.AddScoped<StartCommand>();
+		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
@@ -26,18 +39,17 @@ namespace EnglishTelegramBot
 				});
 			});
 
-			_client = new TelegrafClient("1874538705:AAEBcO4PJL_MPUHOS1tkF9XPDee7WbMC7nc");
-
-			_client.Hears<HelpCommand>("help only full");
-			_client.Hears<HelpCommand>("help part", isFullEqual: false);
-			_client.Hears<StartCommand>("start");
-
-			_client.StartReceining();
+			app.UseTelegramBotLongPolling(ConfigureBot());
 		}
+
+		public IBotBuilder ConfigureBot() =>
+			new BotBuilder()
+				.UseWhen<HelpCommand>(When.NewTextMessage("help"))
+				.UseWhen<StartCommand>(When.NewTextMessage("start"));
 
 		public class HelpCommand : BaseCommand
 		{
-			public override async Task Execute(TelegrafContext context, Message message)
+			public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
 			{
 				await context.Reply("Help text!!!");
 			}
@@ -45,9 +57,9 @@ namespace EnglishTelegramBot
 
 		public class StartCommand : BaseCommand
 		{
-			public override async Task Execute(TelegrafContext context, Message message)
+			public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
 			{
-				await context.Reply("Start text!!! for: " + User.FirstName + " " + User.LastName);
+				await context.Reply("Start text!!! for: " + context.User.FirstName + " " + context.User.LastName);
 			}
 		}
 	}
