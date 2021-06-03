@@ -22,8 +22,10 @@ namespace Telegraf.Net.Pipeline
             {
                 await _branch(context).ConfigureAwait(false);
             }
-
-            await next(context).ConfigureAwait(false);
+            else
+            {
+                await next(context).ConfigureAwait(false);
+            }
         }
     }
 }

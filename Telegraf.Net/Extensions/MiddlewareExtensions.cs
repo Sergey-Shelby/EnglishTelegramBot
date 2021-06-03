@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegraf.Net.Abstractions;
@@ -44,8 +45,15 @@ namespace Telegraf.Net.Extensions
                     {
                         using (var scopeProvider = app.ApplicationServices.CreateScope())
                         {
-                            var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
-                            await updateDelegate(context).ConfigureAwait(false);
+                            try
+                            {
+                                var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
+                                await updateDelegate(context).ConfigureAwait(false);
+                            }
+                            catch(Exception e)
+                            {
+                                Console.WriteLine($"Exception!!!!!!!!!! {e.StackTrace}");
+                            }
                         }
                     }
 

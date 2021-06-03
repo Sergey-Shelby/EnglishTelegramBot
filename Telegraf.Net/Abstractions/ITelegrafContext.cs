@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegraf.Net.Abstractions
 {
@@ -11,6 +12,6 @@ namespace Telegraf.Net.Abstractions
         User User { get; }
         Update Update { get; }
         IServiceProvider Services { get; }
-        Task<Message> Reply(string text);
+        Task<Message> ReplyAsync(string text, IReplyMarkup replyMarkup = null);
     }
 }

@@ -20,7 +20,7 @@ namespace Telegraf.Net
         {
             _components.Add(next =>
                 context =>
-                ((IAnswerCommand)context.Services.GetService(typeof(TCommand))).ExecuteAsync(context, next)
+                    ((IAnswerCommand)context.Services.GetService(typeof(TCommand))).ExecuteAsync(context, next)
             );
             return this;
         }

@@ -1,14 +1,17 @@
+using EnglishTelegramBot.Commands;
+using EnglishTelegramBot.Constants;
+using EnglishTelegramBot.Database.Common;
+using EnglishTelegramBot.DomainCore.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
-using Telegraf.Net.Commands;
 using Telegraf.Net.Extensions;
 using Telegraf.Net.Helpers;
+using EnglishTelegramBot.Extensions;
 
 namespace EnglishTelegramBot
 {
@@ -24,8 +27,12 @@ namespace EnglishTelegramBot
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.Configure<BotOptions>(_configuration.GetSection("BotOptions"));
+			services.AddSingleton<StatusProvider>(x => new StatusProvider());
+			services.AddScoped<IUnitOfWork>(x => new UnitOfWork(new EnglishContext()));
 			services.AddScoped<HelpCommand>();
 			services.AddScoped<StartCommand>();
+			services.AddScoped<LearnWordCommand>();
+			services.AddScoped<CheckWordCommand>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,23 +51,9 @@ namespace EnglishTelegramBot
 
 		public IBotBuilder ConfigureBot() =>
 			new BotBuilder()
-				.UseWhen<HelpCommand>(When.NewTextMessage("help"))
-				.UseWhen<StartCommand>(When.NewTextMessage("start"));
-
-		public class HelpCommand : BaseCommand
-		{
-			public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
-			{
-				await context.Reply("Help text!!!");
-			}
-		}
-
-		public class StartCommand : BaseCommand
-		{
-			public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
-			{
-				await context.Reply("Start text!!! for: " + context.User.FirstName + " " + context.User.LastName);
-			}
-		}
+				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
+				.UseWhen<StartCommand>(When.TextMessageContains("start"))
+				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
+				.UseWhenStatus<CheckWordCommand>(Status.LEARN_WORD);
 	}
 }
