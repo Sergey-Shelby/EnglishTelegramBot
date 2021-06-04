@@ -47,6 +47,10 @@ namespace EnglishTelegramBot.Commands
                     },
                     new KeyboardButton[]
                     {
+                        Message.USERS
+                    },
+                    new KeyboardButton[]
+                    {
                         "Line 2-1", "Line 2-2"
                     }
                 };

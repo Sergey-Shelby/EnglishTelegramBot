@@ -33,6 +33,7 @@ namespace EnglishTelegramBot
 			services.AddScoped<StartCommand>();
 			services.AddScoped<LearnWordCommand>();
 			services.AddScoped<CheckWordCommand>();
+			services.AddScoped<UsersCommand>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -54,6 +55,7 @@ namespace EnglishTelegramBot
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
 				.UseWhen<StartCommand>(When.TextMessageContains("start"))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
+				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
 				.UseWhenStatus<CheckWordCommand>(Status.LEARN_WORD);
 	}
 }
