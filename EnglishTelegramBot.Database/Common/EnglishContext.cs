@@ -8,6 +8,7 @@ namespace EnglishTelegramBot.Database.Common
         public DbSet<Word> Words { get; set; }
         public DbSet<Theme> Themes { get; set; }
         public DbSet<PartOfSpeech> PartsOfSpeech { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public EnglishContext()
         {

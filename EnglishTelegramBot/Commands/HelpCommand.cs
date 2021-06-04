@@ -18,7 +18,8 @@ namespace EnglishTelegramBot.Commands
 
 		public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
 		{
-			var word = _unitOfWork.WordRepository.FetchAll().OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+			var words = await _unitOfWork.WordRepository.FetchAllAsync();
+			var word = words.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
 			await context.ReplyAsync(word.English);
 		}
 	}

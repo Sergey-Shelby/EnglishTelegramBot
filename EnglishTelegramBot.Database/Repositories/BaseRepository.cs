@@ -3,6 +3,7 @@ using EnglishTelegramBot.DomainCore.Abstractions.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
@@ -17,19 +18,19 @@ namespace EnglishTelegramBot.Database.Repositories
             this.dbSet = db.Set<T>();
         }
 
-        public IEnumerable<T> FetchAll()
+        public async Task<IEnumerable<T>> FetchAllAsync()
         {
-            return dbSet.AsNoTracking();
+            return await dbSet.AsNoTracking().ToListAsync();
         }
 
-        public T FetchById(int id)
+        public async Task<T> FetchByIdAsync(int id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
 
-        public void Create(T t)
+        public async Task CreateAsync(T t)
         {
-            dbSet.Add(t);
+            await dbSet.AddAsync(t);
         }
 
         public void Update(T t)
@@ -45,9 +46,9 @@ namespace EnglishTelegramBot.Database.Repositories
                 dbSet.Remove(t);
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         private bool disposed = false;
