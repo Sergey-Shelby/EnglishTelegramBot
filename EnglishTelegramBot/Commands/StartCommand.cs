@@ -18,7 +18,6 @@ namespace EnglishTelegramBot.Commands
         }
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-
             User user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
             if (user == null)
 			{
@@ -35,7 +34,7 @@ namespace EnglishTelegramBot.Commands
             await context.ReplyAsync("Good evening", CreateMainMenuKeyboard());
         }
 
-        private ReplyKeyboardMarkup CreateMainMenuKeyboard()
+        public static ReplyKeyboardMarkup CreateMainMenuKeyboard()
         {
             var rkm = new ReplyKeyboardMarkup();
             rkm.Keyboard =

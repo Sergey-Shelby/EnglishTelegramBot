@@ -12,8 +12,8 @@ namespace Telegraf.Net
           )
               where TCommand : IAnswerCommand
         {
-            var branchDelegate = new BotBuilder().Use<TCommand>().Build();
-            builder.Use(new UseWhenMiddleware(predicate, branchDelegate));
+            //var branchDelegate = new BotBuilder().Use<TCommand>().Build();
+            builder.Use(new UseWhenMiddleware<TCommand>(predicate));
             return builder;
         }
     }

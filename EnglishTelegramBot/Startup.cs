@@ -53,6 +53,7 @@ namespace EnglishTelegramBot
 		public IBotBuilder ConfigureBot() =>
 			new BotBuilder()
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
+				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
 				.UseWhen<StartCommand>(When.TextMessageContains("start"))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
 				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
