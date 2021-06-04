@@ -9,6 +9,7 @@ namespace EnglishTelegramBot.DomainCore.Abstractions
 		IThemeRepository ThemeRepository { get; }
 		IPartOfSpeechRepository PartOfSpeechRepository { get; } 
 		IUserRepository UserRepository { get; }
+		IWordTrainigRepository WordTrainigRepository { get; }
 		Task SaveChangesAsync();
 	}
 }

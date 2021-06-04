@@ -17,11 +17,13 @@ namespace EnglishTelegramBot.Database.Common
 		private IThemeRepository _lazyThemeRepository;
 		private IPartOfSpeechRepository _lazyPartOfSpeechRepository;
 		private IUserRepository _lazyUserRepository;
+		private IWordTrainigRepository _lazyWordTrainingRepository;
 
 		public IWordRepository WordRepository => _lazyWorkRepository?? new WordRepository(_englishContext);
 		public IThemeRepository ThemeRepository => _lazyThemeRepository ?? new ThemeRepository(_englishContext);
 		public IPartOfSpeechRepository PartOfSpeechRepository => _lazyPartOfSpeechRepository ?? new PartOfSpeechRepository(_englishContext);
 		public IUserRepository UserRepository => _lazyUserRepository ?? new UserRepository(_englishContext);
+		public IWordTrainigRepository WordTrainigRepository => _lazyWordTrainingRepository ?? new WordTrainingRepository(_englishContext);
  
 		public async Task SaveChangesAsync()
 		{
