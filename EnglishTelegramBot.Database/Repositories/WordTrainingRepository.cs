@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	class WordTrainingRepository : BaseRepository<WordTrainig>, IWordTrainigRepository
+	class WordTrainingRepository : BaseRepository<WordTraining>, IWordTrainigRepository
 	{
-		private DbSet<WordTrainig> _dbset;
+		private DbSet<WordTraining> _dbset;
 		public WordTrainingRepository(EnglishContext englishContext) : base(englishContext) 
 		{
-			_dbset = englishContext.Set<WordTrainig>();
+			_dbset = englishContext.Set<WordTraining>();
 		}
 
-		public async Task<WordTrainig> FetchByWordIdAndUserId(int wordId, int userId)
+		public async Task<WordTraining> FetchByWordIdAndUserId(int wordId, int userId)
 		{
 			return await _dbset.FirstOrDefaultAsync(x => x.WordId == wordId && x.UserId == userId);
 		}

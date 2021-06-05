@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
-	public interface IWordTrainigRepository : IBaseRepository<WordTrainig>
+	public interface IWordTrainigRepository : IBaseRepository<WordTraining>
 	{
-		Task<WordTrainig> FetchByWordIdAndUserId(int wordId, int userId);
+		Task<WordTraining> FetchByWordIdAndUserId(int wordId, int userId);
 	}
 }
