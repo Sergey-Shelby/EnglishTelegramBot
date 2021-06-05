@@ -4,6 +4,6 @@
     {
         public const string LEARN_WORD = "Учить слова";
         public const string USERS = "Юзера 💿";
-
+        public const string STATISTICS = "Статистика";
     }
 }
