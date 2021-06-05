@@ -52,7 +52,7 @@ namespace Telegraf.Net.Extensions
                             }
                             catch(Exception e)
                             {
-                                Console.WriteLine($"Exception!!!!!!!!!! {e.StackTrace}");
+                                tempclass.Print(e.StackTrace);
                             }
                         }
                     }
