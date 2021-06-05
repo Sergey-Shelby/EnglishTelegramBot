@@ -6,6 +6,7 @@ namespace EnglishTelegramBot
     {
         void SetStatus(int userId, int statusCode, object details = null);
         UserStatus<T> GetStatus<T>(int userId);
+        int? GetStatusCode(int userId);
         void ClearStatus(int userId);
     }
 
@@ -18,7 +19,7 @@ namespace EnglishTelegramBot
             _userStatuses = new Dictionary<int, UserStatus<object>>();
         }
 
-        public int? GetStatus(int userId)
+        public int? GetStatusCode(int userId)
         {
             _userStatuses.TryGetValue(userId, out var userStatus);
             return userStatus?.StatusCode;

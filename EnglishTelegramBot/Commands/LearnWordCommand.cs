@@ -8,8 +8,8 @@ namespace EnglishTelegramBot.Commands
 {
     public class LearnWordCommand : BaseCommand
     {
-        StatusProvider _statusProvider;
-        public LearnWordCommand(StatusProvider statusProvider)
+        IStatusProvider _statusProvider;
+        public LearnWordCommand(IStatusProvider statusProvider)
         {
             _statusProvider = statusProvider;
         }

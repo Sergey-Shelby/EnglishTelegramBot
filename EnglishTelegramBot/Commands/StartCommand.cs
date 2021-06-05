@@ -1,9 +1,7 @@
-﻿using EnglishTelegramBot.Constants;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Commands;
-using Telegram.Bot.Types.ReplyMarkups;
 using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
 
@@ -28,32 +26,11 @@ namespace EnglishTelegramBot.Commands
                     LastName = context.User.LastName,
                     UserName = context.User.Username,
                     LanguageCode = context.User.LanguageCode
-                }) ;
-			}
-            await _unitOfWork.UserRepository.SaveAsync();
-            await context.ReplyAsync("Good evening", CreateMainMenuKeyboard());
-        }
-
-        private static ReplyKeyboardMarkup CreateMainMenuKeyboard()
-        {
-            var rkm = new ReplyKeyboardMarkup();
-            rkm.Keyboard =
-                new KeyboardButton[][]
-                {
-                    new KeyboardButton[]
-                    {
-                        Message.LEARN_WORD
-                    },
-                    new KeyboardButton[]
-                    {
-                        Message.USERS
-                    },
-                    new KeyboardButton[]
-                    {
-                        "Line 2-1", "Line 2-2"
-                    }
-                };
-            return rkm;
+                });
+                await _unitOfWork.UserRepository.SaveAsync();
+                await context.ReplyAsync("Спасибо за регистрацию!");
+            }
+            await next(context);
         }
     }
 }

@@ -7,8 +7,8 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 {
     public class FinishTrainingCommand : BaseCommand
     {
-        StatusProvider _statusProvider;
-        public FinishTrainingCommand(StatusProvider statusProvider)
+        IStatusProvider _statusProvider;
+        public FinishTrainingCommand(IStatusProvider statusProvider)
         {
             _statusProvider = statusProvider;
         }

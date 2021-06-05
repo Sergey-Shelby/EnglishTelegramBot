@@ -16,8 +16,8 @@ namespace EnglishTelegramBot.Extensions
 
         public static Predicate<ITelegrafContext> HasStatus(int status) =>
             (ITelegrafContext context) => {
-                var statusProvider = (StatusProvider)context.Services.GetService(typeof(StatusProvider));
-                var statusCode = statusProvider.GetStatus(context.Update.Message.From.Id);
+                var statusProvider = (IStatusProvider)context.Services.GetService(typeof(IStatusProvider));
+                var statusCode = statusProvider.GetStatusCode(context.Update.Message.From.Id);
                 return statusCode == status;
                 };
     }

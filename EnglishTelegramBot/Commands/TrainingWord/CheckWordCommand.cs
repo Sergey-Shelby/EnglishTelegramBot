@@ -9,9 +9,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 {
     public class CheckWordCommand : BaseCommand
     {
-        StatusProvider _statusProvider;
+        IStatusProvider _statusProvider;
         IUnitOfWork _unitOfWork;
-        public CheckWordCommand(StatusProvider statusProvider, IUnitOfWork unitOfWork)
+        public CheckWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;

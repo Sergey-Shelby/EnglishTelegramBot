@@ -1,17 +1,17 @@
-using EnglishTelegramBot.Commands;
-using EnglishTelegramBot.Constants;
-using EnglishTelegramBot.Database.Common;
-using EnglishTelegramBot.DomainCore.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using EnglishTelegramBot.Commands;
+using EnglishTelegramBot.Constants;
+using EnglishTelegramBot.Database.Common;
+using EnglishTelegramBot.DomainCore.Abstractions;
+using EnglishTelegramBot.Extensions;
+using EnglishTelegramBot.Commands.TrainingWord;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Extensions;
-using EnglishTelegramBot.Extensions;
-using EnglishTelegramBot.Commands.TrainingWord;
 
 namespace EnglishTelegramBot
 {
@@ -27,15 +27,9 @@ namespace EnglishTelegramBot
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.Configure<BotOptions>(_configuration.GetSection("BotOptions"));
-			services.AddSingleton<StatusProvider>(x => new StatusProvider());
+			services.AddSingleton<IStatusProvider>(x => new StatusProvider());
 			services.AddScoped<IUnitOfWork>(x => new UnitOfWork(new EnglishContext()));
-			services.AddScoped<HelpCommand>();
-			services.AddScoped<StartCommand>();
-			services.AddScoped<LearnWordCommand>();
-			services.AddScoped<CheckWordCommand>();
-			services.AddScoped<FinishTrainingCommand>();
-			services.AddScoped<NextWordCommand>(); 
-			services.AddScoped<UsersCommand>();
+			services.AddCommands();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,15 +49,17 @@ namespace EnglishTelegramBot
 		public IBotBuilder ConfigureBot() =>
 			new BotBuilder()
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
-				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
-				.UseWhen<StartCommand>(When.TextMessageContains("start"))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
 				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
+
+				.MapWhen(When.TextMessageContains("start"), x => x
+					.Use<StartCommand>()
+					.Use<MainMenuCommand>())
 
 				.MapWhen(When.HasStatus(Status.LEARN_WORD), x => x
 					.MapWhen(When.TextMessageEquals("!stop"), x => x
 						.Use<FinishTrainingCommand>()
-						.Use<StartCommand>())
+						.Use<MainMenuCommand>())
 					.Use<CheckWordCommand>()
 					.Use<NextWordCommand>());
 	}

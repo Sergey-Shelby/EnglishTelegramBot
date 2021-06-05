@@ -14,9 +14,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 {
     public class NextWordCommand : BaseCommand
     {
-        StatusProvider _statusProvider;
+        IStatusProvider _statusProvider;
         IUnitOfWork _unitOfWork;
-        public NextWordCommand(StatusProvider statusProvider, IUnitOfWork unitOfWork)
+        public NextWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
