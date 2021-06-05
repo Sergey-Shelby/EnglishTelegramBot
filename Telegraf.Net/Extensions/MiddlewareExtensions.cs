@@ -52,7 +52,14 @@ namespace Telegraf.Net.Extensions
                             }
                             catch(Exception e)
                             {
-                                tempclass.Print(e.StackTrace);
+                                await ExceptionLogger.PrintAsync($"⌛️ {DateTime.Now}");
+                                await ExceptionLogger.PrintAsync($"📍 Base exception:\n*{e.Message}*\n{e.StackTrace}");
+                                if (e.InnerException != null)
+                                {
+                                    await ExceptionLogger.PrintAsync($"📍 Inner exception:\n*{e.InnerException.Message}*\n{e.InnerException.StackTrace}");
+                                }
+
+                                await ExceptionLogger.PrintSticker();
                             }
                         }
                     }
