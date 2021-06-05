@@ -31,9 +31,9 @@ namespace Telegraf.Net
             return this;
         }
 
-        public UpdateDelegate Build()
+        public UpdateDelegate Build(UpdateDelegate handle = null)
         {
-            UpdateDelegate handle = ctx => { return Task.FromResult(0); };
+            handle ??= ctx => { return Task.FromResult(0); };
 
             foreach (var component in _components.Reverse())
             {

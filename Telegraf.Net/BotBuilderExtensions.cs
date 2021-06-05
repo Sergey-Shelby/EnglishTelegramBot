@@ -16,5 +16,14 @@ namespace Telegraf.Net
             builder.Use(new UseWhenMiddleware<TCommand>(predicate));
             return builder;
         }
+
+        public static IBotBuilder MapWhen(
+          this IBotBuilder builder,
+          Predicate<ITelegrafContext> predicate,
+          Action<IBotBuilder> configure)
+        {
+            builder.Use(new MapWhenMiddleware(predicate, configure));
+            return builder;
+        }
     }
 }

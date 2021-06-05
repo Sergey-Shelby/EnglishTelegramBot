@@ -3,7 +3,7 @@ using Telegraf.Net.Abstractions;
 
 namespace Telegraf.Net.Helpers
 {
-    public class When
+    public class BaseWhen
     {
         public static bool NewTextMessage(ITelegrafContext context) =>
             context.Update.Message?.Text != null;

@@ -10,13 +10,13 @@ using Telegraf.Net.Abstractions;
 using Telegraf.Net.Commands;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace EnglishTelegramBot.Commands
+namespace EnglishTelegramBot.Commands.TrainingWord
 {
-    public class CheckWordCommand : BaseCommand
+    public class NextWordCommand : BaseCommand
     {
         StatusProvider _statusProvider;
         IUnitOfWork _unitOfWork;
-        public CheckWordCommand(StatusProvider statusProvider, IUnitOfWork unitOfWork)
+        public NextWordCommand(StatusProvider statusProvider, IUnitOfWork unitOfWork)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
@@ -24,24 +24,6 @@ namespace EnglishTelegramBot.Commands
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            if (context.Update.Message.Text.Equals("!stop"))
-            {
-                await context.ReplyAsync("Тренеровка завершена!", StartCommand.CreateMainMenuKeyboard());
-                _statusProvider.ClearStatus(context.User.Id);
-                return;
-            }
-
-            var status =_statusProvider.GetStatus<Word>(context.User.Id);
-            if (status.Details != null)
-            {
-                if (status.Details.English.Trim() != context.Update.Message.Text)
-                {
-                    await context.ReplyAsync("🤯 Не правильно!\nПопробуй ещё!");
-                    return;
-                }
-                await context.ReplyAsync("🎊 Правильно!");
-            }
-
             var words = await FetchNextWords();
 
             var rightWord = words[0];

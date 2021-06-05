@@ -10,8 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Extensions;
-using Telegraf.Net.Helpers;
 using EnglishTelegramBot.Extensions;
+using EnglishTelegramBot.Commands.TrainingWord;
 
 namespace EnglishTelegramBot
 {
@@ -33,6 +33,8 @@ namespace EnglishTelegramBot
 			services.AddScoped<StartCommand>();
 			services.AddScoped<LearnWordCommand>();
 			services.AddScoped<CheckWordCommand>();
+			services.AddScoped<FinishTrainingCommand>();
+			services.AddScoped<NextWordCommand>(); 
 			services.AddScoped<UsersCommand>();
 		}
 
@@ -57,6 +59,13 @@ namespace EnglishTelegramBot
 				.UseWhen<StartCommand>(When.TextMessageContains("start"))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
 				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
-				.UseWhenStatus<CheckWordCommand>(Status.LEARN_WORD);
+
+				.MapWhen(When.HasStatus(Status.LEARN_WORD), x => x
+					.MapWhen(When.TextMessageEquals("!stop"), x => x
+						.Use<FinishTrainingCommand>()
+						.Use<StartCommand>())
+					.Use<CheckWordCommand>()
+					.Use<NextWordCommand>());
 	}
 }
+

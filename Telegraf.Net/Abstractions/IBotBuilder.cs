@@ -4,6 +4,6 @@
     {
         IBotBuilder Use<TCommand>() where TCommand : IAnswerCommand;
         IBotBuilder Use<TCommand>(TCommand handler) where TCommand : IAnswerCommand;
-        UpdateDelegate Build();
+        UpdateDelegate Build(UpdateDelegate handle = null);
     }
 }

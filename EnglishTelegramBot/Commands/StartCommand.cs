@@ -34,7 +34,7 @@ namespace EnglishTelegramBot.Commands
             await context.ReplyAsync("Good evening", CreateMainMenuKeyboard());
         }
 
-        public static ReplyKeyboardMarkup CreateMainMenuKeyboard()
+        private static ReplyKeyboardMarkup CreateMainMenuKeyboard()
         {
             var rkm = new ReplyKeyboardMarkup();
             rkm.Keyboard =
