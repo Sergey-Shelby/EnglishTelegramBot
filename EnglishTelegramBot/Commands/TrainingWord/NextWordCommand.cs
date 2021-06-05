@@ -29,7 +29,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var rightWord = words[0];
 
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            await _unitOfWork.WordTrainigRepository.CreateAsync(new WordTrainig()
+            await _unitOfWork.WordTrainigRepository.CreateAsync(new WordTraining()
             {
                 WordId = rightWord.ID,
                 UserId = user.Id,

@@ -51,6 +51,7 @@ namespace EnglishTelegramBot
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
 				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
+				.UseWhen<StatisticsCommand>(When.TextMessageEquals(Message.STATISTICS))	
 
 				.MapWhen(When.TextMessageContains("start"), x => x
 					.Use<StartCommand>()

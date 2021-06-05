@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EnglishTelegramBot.DomainCore.Entities
 {
-	public class WordTrainig
+	public class WordTraining
 	{
 		public int Id { get; set; }
 		public int WordId { get; set; }

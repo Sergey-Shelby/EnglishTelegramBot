@@ -23,7 +23,8 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var status =_statusProvider.GetStatus<Word>(context.User.Id);
             if (status.Details != null)
             {
-                var wordTraining = await _unitOfWork.WordTrainigRepository.FetchByWordIdAndUserId(status.Details.ID, context.User.Id);
+                var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
+                var wordTraining = await _unitOfWork.WordTrainigRepository.FetchByWordIdAndUserId(status.Details.ID, user.Id);
 
                 if (status.Details.English.Trim() != context.Update.Message.Text)
                 {
@@ -40,16 +41,12 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             }
             await next(context);
         }
-        public async Task UpdateWordTraining(WordTrainig wordTraining, int userTelegramId, bool result) 
+        public async Task UpdateWordTraining(WordTraining wordTraining, int userTelegramId, bool result) 
 		{
-            var user = await _unitOfWork.UserRepository.FetchByTelegramId(userTelegramId);
-            _unitOfWork.WordTrainigRepository.Update(new WordTrainig()
-            {
-                WordId = wordTraining.Id,
-                UserId = user.Id,
-                Result = result,
-                FinishedTime = DateTime.Now
-            });
+            wordTraining.Result = result;
+            wordTraining.FinishedTime = DateTime.Now;
+            //var user = await _unitOfWork.UserRepository.FetchByTelegramId(userTelegramId);
+            _unitOfWork.WordTrainigRepository.Update(wordTraining);
             await _unitOfWork.WordTrainigRepository.SaveAsync();
         }
     }
