@@ -16,6 +16,12 @@ namespace Telegraf.Net
         public Task<Message> ReplyAsync(string text, IReplyMarkup replyMarkup = null) => 
             Bot.SendTextMessageAsync(User.Id, text, replyMarkup: replyMarkup);
 
+        public Task PinMessageAsync(Message message) =>
+            Bot.PinChatMessageAsync(message.Chat.Id, message.MessageId);
+
+        public Task UnpinMessageAsync() =>
+            Bot.UnpinChatMessageAsync(Update.Message.Chat.Id);
+
         public TelegrafContext(ITelegramBotClient bot, Update u, IServiceProvider services)
         {
             Bot = bot;

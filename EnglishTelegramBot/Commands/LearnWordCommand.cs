@@ -16,7 +16,8 @@ namespace EnglishTelegramBot.Commands
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
+            var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
+            await context.PinMessageAsync(message);
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD);
             await next(context);
         }
