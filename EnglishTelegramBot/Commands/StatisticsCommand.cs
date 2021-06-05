@@ -20,9 +20,19 @@ namespace EnglishTelegramBot.Commands
         {
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
             var wordTrainings = await _unitOfWork.WordTrainigRepository.FetchAllByUserIdAsync(user.Id);
-            var listWordTraining = wordTrainings.OrderBy(x => x.Result).ToList();
+            var listWordTrainings = wordTrainings
+                .GroupBy(x => x.Word.English)
+                .Select(x => new 
+                { 
+                    Word = x.Key, 
+                    CountTrue = x.Count(y => y.Result == true), 
+                    CountFalse = x.Count(z => z.Result == false)
+                })
+                .OrderByDescending(z => z.CountTrue + z.CountFalse)
+                .ThenByDescending(o => o.CountTrue).ToList();
+
             var wordList = new StringBuilder();
-            listWordTraining.ForEach(x => wordList.AppendLine($"{x.Word.English} - {x.Word.Russian} | {x.Result}"));
+            listWordTrainings.ForEach(x => wordList.AppendLine($"{x.Word}: ✅ — { x.CountTrue}, ❌ {x.CountFalse}."));
 
 			await context.ReplyAsync($"Cтатистика:\n{wordList}");
         }

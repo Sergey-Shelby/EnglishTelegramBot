@@ -47,15 +47,14 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                     new KeyboardButton[] { words[2].English, words[3].English },
                 };
 
-            await context.ReplyAsync($"Текущее слово: {rightWord.Russian}", rkm);
+            await context.ReplyAsync($"Текущее слово: {rightWord.Russian} ({rightWord.Theme.Name})", rkm);
 
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, rightWord);
         }
 
         private async Task<IList<Word>> FetchNextWords()
         {
-            var words = await _unitOfWork.WordRepository.FetchAllAsync();
-            return words.OrderBy(x => Guid.NewGuid()).Take(4).ToList();
+            return await _unitOfWork.WordRepository.FetchFourWords();
         }
     }
 }
