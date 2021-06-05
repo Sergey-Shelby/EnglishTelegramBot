@@ -1,5 +1,6 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
+using System;
 using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
@@ -22,14 +23,34 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var status =_statusProvider.GetStatus<Word>(context.User.Id);
             if (status.Details != null)
             {
+                var wordTraining = await _unitOfWork.WordTrainigRepository.FetchByWordIdAndUserId(status.Details.ID, context.User.Id);
+
                 if (status.Details.English.Trim() != context.Update.Message.Text)
                 {
+                    await UpdateWordTraining(wordTraining, context.User.Id, false);
+
                     await context.ReplyAsync("🤯 Не правильно!\nПопробуй ещё!");
                     return;
+                }
+                if (wordTraining.Result == null)
+                {
+                    await UpdateWordTraining(wordTraining, context.User.Id, true);
                 }
                 await context.ReplyAsync("🎊 Правильно!");
             }
             await next(context);
+        }
+        public async Task UpdateWordTraining(WordTrainig wordTraining, int userTelegramId, bool result) 
+		{
+            var user = await _unitOfWork.UserRepository.FetchByTelegramId(userTelegramId);
+            _unitOfWork.WordTrainigRepository.Update(new WordTrainig()
+            {
+                WordId = wordTraining.Id,
+                UserId = user.Id,
+                Result = result,
+                FinishedTime = DateTime.Now
+            });
+            await _unitOfWork.WordTrainigRepository.SaveAsync();
         }
     }
 }

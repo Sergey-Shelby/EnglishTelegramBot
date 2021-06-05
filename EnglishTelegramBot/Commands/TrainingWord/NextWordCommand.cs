@@ -27,7 +27,17 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var words = await FetchNextWords();
 
             var rightWord = words[0];
-            words = words.OrderBy(x => Guid.NewGuid()).ToList();
+
+            var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
+            await _unitOfWork.WordTrainigRepository.CreateAsync(new WordTrainig()
+            {
+                WordId = rightWord.ID,
+                UserId = user.Id,
+                CreationTime = DateTime.Now
+            });
+			await _unitOfWork.WordTrainigRepository.SaveAsync();
+
+			words = words.OrderBy(x => Guid.NewGuid()).ToList();
 
             var rkm = new ReplyKeyboardMarkup();
             rkm.Keyboard =
