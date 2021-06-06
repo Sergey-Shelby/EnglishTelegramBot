@@ -20,7 +20,7 @@ namespace EnglishTelegramBot.Commands
 		{
 			var words = await _unitOfWork.WordRepository.FetchAllAsync();
 			var word = words.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-			await context.ReplyAsync(word.English);
+			await context.ReplyAsync(word.EnglishWord);
 		}
 	}
 }

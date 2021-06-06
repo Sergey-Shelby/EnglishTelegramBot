@@ -24,9 +24,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (status.Details != null)
             {
                 var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-                var wordTraining = await _unitOfWork.WordTrainigRepository.FetchByWordIdAndUserId(status.Details.ID, user.Id);
+                var wordTraining = await _unitOfWork.WordTrainigRepository.FetchByWordIdAndUserId(status.Details.Id, user.Id);
 
-                if (status.Details.English.Trim() != context.Update.Message.Text)
+                if (status.Details.EnglishWord.Trim() != context.Update.Message.Text)
                 {
                     await UpdateWordTraining(wordTraining, context.User.Id, false);
 
