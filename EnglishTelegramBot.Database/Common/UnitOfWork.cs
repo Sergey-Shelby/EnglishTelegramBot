@@ -17,20 +17,21 @@ namespace EnglishTelegramBot.Database.Common
 		private IThemeRepository _lazyThemeRepository;
 		private IPartOfSpeechRepository _lazyPartOfSpeechRepository;
 		private IUserRepository _lazyUserRepository;
-		private IWordTrainigRepository _lazyWordTrainingRepository;
+		private IWordTrainingRepository _lazyWordTrainingRepository;
 		private IWordPartOfSpeechRepository _lazyIWordPartOfSpeechRepository;
 		private IWordPartOfSpeechDataRepository _lazyIWordPartOfSpeechDataRepository;
 		private IThemeWordsRepository _lazyIThemeWordsRepository;
+		private IWordTrainingSetRepository _lazyWordTrainingSetRepository;
 
 		public IWordRepository WordRepository => _lazyWorkRepository?? new WordRepository(_englishContext);
 		public IThemeRepository ThemeRepository => _lazyThemeRepository ?? new ThemeRepository(_englishContext);
 		public IPartOfSpeechRepository PartOfSpeechRepository => _lazyPartOfSpeechRepository ?? new PartOfSpeechRepository(_englishContext);
 		public IUserRepository UserRepository => _lazyUserRepository ?? new UserRepository(_englishContext);
-		public IWordTrainigRepository WordTrainigRepository => _lazyWordTrainingRepository ?? new WordTrainingRepository(_englishContext);
-
+		public IWordTrainingRepository WordTrainingRepository => _lazyWordTrainingRepository ?? new WordTrainingRepository(_englishContext);
 		public IWordPartOfSpeechRepository WordPartOfSpeechRepository => _lazyIWordPartOfSpeechRepository ?? new WordPartOfSpeechRepository(_englishContext);
 		public IWordPartOfSpeechDataRepository WordPartOfSpeechDataRepository => _lazyIWordPartOfSpeechDataRepository ?? new WordPartOfSpeechDataRepository(_englishContext);
 		public IThemeWordsRepository ThemeWordsRepository => _lazyIThemeWordsRepository ?? new ThemeWordsRepository(_englishContext);
+		public IWordTrainingSetRepository WordTrainingSetRepository => _lazyWordTrainingSetRepository ?? new WordTrainingSetRepository(_englishContext);
 
 		public async Task SaveChangesAsync()
 		{
