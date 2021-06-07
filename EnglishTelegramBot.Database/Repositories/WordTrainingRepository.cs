@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace EnglishTelegramBot.Database.Repositories
 {
-	class WordTrainingRepository : BaseRepository<WordTraining>, IWordTrainigRepository
+	class WordTrainingRepository : BaseRepository<WordTraining>, IWordTrainingRepository
 	{
 		private DbSet<WordTraining> _dbset;
 		public WordTrainingRepository(EnglishContext englishContext) : base(englishContext) 
