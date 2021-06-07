@@ -18,11 +18,13 @@ namespace EnglishTelegramBot.Database.Repositories
 
 		public async Task<List<WordTraining>> FetchAllByUserIdAsync(int userId)
 		{
-			return await _dbset.Where(x => x.UserId == userId).Include(x => x.Word).ToListAsync();
+			//return await _dbset.Where(x => x.UserId == userId).Include(x => x.Word).ToListAsync();
+			throw new System.Exception();
 		}
 		public async Task<WordTraining> FetchByWordIdAndUserId(int wordId, int userId)
 		{
-			return await _dbset.FirstOrDefaultAsync(x => x.WordId == wordId && x.UserId == userId);
+			//return await _dbset.FirstOrDefaultAsync(x => x.WordId == wordId && x.UserId == userId);
+			throw new System.Exception();
 		}
 	}
 }
