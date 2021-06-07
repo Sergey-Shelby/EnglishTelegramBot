@@ -28,7 +28,7 @@ namespace EnglishTelegramBot
         public UserStatus<T> GetStatus<T>(int userId)
         {
             _userStatuses.TryGetValue(userId, out var userStatus);
-            if (userStatus != null)
+            if (userStatus != null && userStatus.Details is T)
                 return new UserStatus<T> { StatusCode = userStatus.StatusCode, Details = (T)userStatus.Details };
             return null;
         }

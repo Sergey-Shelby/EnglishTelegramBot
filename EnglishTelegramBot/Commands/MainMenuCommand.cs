@@ -26,6 +26,10 @@ namespace EnglishTelegramBot.Commands
                     },
                     new KeyboardButton[]
                     {
+                        Message.TEST_WORD
+                    },
+                    new KeyboardButton[]
+                    {
                         Message.USERS
                     },
                     new KeyboardButton[]

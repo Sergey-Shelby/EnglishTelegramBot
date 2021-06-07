@@ -50,6 +50,7 @@ namespace EnglishTelegramBot
 			new BotBuilder()
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_WORD))
+				.UseWhen<WordTestCommand>(When.TextMessageEquals(Message.TEST_WORD))
 				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
 				.UseWhen<StatisticsCommand>(When.TextMessageEquals(Message.STATISTICS))	
 
@@ -58,7 +59,7 @@ namespace EnglishTelegramBot
 					.Use<MainMenuCommand>())
 
 				.MapWhen(When.HasStatus(Status.LEARN_WORD), x => x
-					.MapWhen(When.TextMessageEquals("!stop"), x => x
+					.MapWhen(When.TextMessageEquals("!stop"), x => x//.Or(When.CheckCountWordTraining()), x => x
 						.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>())
 					.Use<CheckWordCommand>()
