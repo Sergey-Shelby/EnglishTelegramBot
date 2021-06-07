@@ -31,7 +31,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
             await _unitOfWork.WordTrainigRepository.CreateAsync(new WordTraining()
             {
-                WordId = rightWord.ID,
+                WordId = rightWord.Id,
                 UserId = user.Id,
                 CreationTime = DateTime.Now
             });
@@ -43,11 +43,11 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             rkm.Keyboard =
                 new KeyboardButton[][]
                 {
-                    new KeyboardButton[] { words[0].English, words[1].English },
-                    new KeyboardButton[] { words[2].English, words[3].English },
+                    new KeyboardButton[] { words[0].EnglishWord, words[1].EnglishWord },
+                    new KeyboardButton[] { words[2].EnglishWord, words[3].EnglishWord },
                 };
 
-            await context.ReplyAsync($"Текущее слово: {rightWord.Russian} ({rightWord.Theme.Name})", rkm);
+            await context.ReplyAsync($"Текущее слово: {rightWord.RussianWord}", rkm);
 
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, rightWord);
         }

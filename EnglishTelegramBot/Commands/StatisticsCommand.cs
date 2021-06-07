@@ -21,7 +21,7 @@ namespace EnglishTelegramBot.Commands
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
             var wordTrainings = await _unitOfWork.WordTrainigRepository.FetchAllByUserIdAsync(user.Id);
             var listWordTrainings = wordTrainings
-                .GroupBy(x => x.Word.English)
+                .GroupBy(x => x.Word.EnglishWord)
                 .Select(x => new 
                 { 
                     Word = x.Key, 
