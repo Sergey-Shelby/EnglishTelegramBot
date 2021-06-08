@@ -16,11 +16,13 @@ namespace EnglishTelegramBot.Database.Repositories
 			_dbset = englishContext.Set<WordTraining>();
 		}
 
-		//public async Task<List<WordTraining>> FetchAllByUserIdAsync(int userId)
-		//{
-		//	//return await _dbset.Where(x => x.UserId == userId).Include(x => x.Word).ToListAsync();
-		//	throw new System.Exception();
-		//}
+		public async Task<List<WordTraining>> FetchAllByUserIdAsync(int userId)
+		{
+			//return await _dbset.Include(x => x.WordTrainingSet)
+
+			//return await _dbset.Where(x => x.UserId == userId).Include(x => x.Word).ToListAsync();
+			throw new System.Exception();
+		}
 
 		public Task<List<WordTraining>> FetchBySetAsync(int setId)
 		{
