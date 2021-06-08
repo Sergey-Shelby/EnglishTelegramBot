@@ -18,24 +18,33 @@ namespace EnglishTelegramBot.Commands
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            //var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            //var wordTrainings = await _unitOfWork.WordTrainingRepository.FetchAllByUserIdAsync(user.Id);
-            //var listWordTrainings = wordTrainings
-            //    .GroupBy(x => x.Word.EnglishWord)
-            //    .Select(x => new 
-            //    { 
-            //        Word = x.Key, 
-            //        CountTrue = x.Count(y => y.Result == true), 
-            //        CountFalse = x.Count(z => z.Result == false)
-            //    })
-            //    .OrderByDescending(z => z.CountTrue + z.CountFalse)
-            //    .ThenByDescending(o => o.CountTrue).ToList();
+            var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
 
-            //var wordList = new StringBuilder();
-            //listWordTrainings.ForEach(x => wordList.AppendLine($"{x.Word}: ✅ — { x.CountTrue}, ❌ {x.CountFalse}."));
+            var wordTrainingSets = await _unitOfWork.WordTrainingSetRepository.FetchAllByUserIdAsync(user.Id);
 
-            //await context.ReplyAsync($"Cтатистика:\n{wordList}");
-            await context.ReplyAsync("Coming soon...");
+            var statList = new StringBuilder();
+
+			//TODO: edit
+
+			wordTrainingSets.ForEach(x => statList.AppendLine($"{x.Name} [{x.CreatedDate}] — {x.WordTraining.Where(x => x.Result == true).Count() / x.WordTraining.Count() * 100}%"));
+
+			//var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
+			//var wordTrainings = await _unitOfWork.WordTrainingRepository.FetchAllByUserIdAsync(user.Id);
+			//var listWordTrainings = wordTrainings
+			//    .GroupBy(x => x.Word.EnglishWord)
+			//    .Select(x => new 
+			//    { 
+			//        Word = x.Key, 
+			//        CountTrue = x.Count(y => y.Result == true), 
+			//        CountFalse = x.Count(z => z.Result == false)
+			//    })
+			//    .OrderByDescending(z => z.CountTrue + z.CountFalse)
+			//    .ThenByDescending(o => o.CountTrue).ToList();
+
+			//var wordList = new StringBuilder();
+			//listWordTrainings.ForEach(x => wordList.AppendLine($"{x.Word}: ✅ — { x.CountTrue}, ❌ {x.CountFalse}."));
+
+			await context.ReplyAsync($"Cтатистика:\n{statList}");
         }
 	}
 }

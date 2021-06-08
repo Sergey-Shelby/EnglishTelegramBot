@@ -11,6 +11,7 @@ namespace EnglishTelegramBot.DomainCore.Entities
 		public int WordTrainingSetId { get; set; }
 		public bool? Result { get; set; }
 		public bool IsFinished { get; set; }
-		public virtual Word Word {get; set;}
+		public virtual Word Word {get; set; }
+		public virtual WordTrainingSet WordTrainingSet { get; set; }
 	}
 }
