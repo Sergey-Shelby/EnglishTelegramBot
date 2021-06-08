@@ -28,14 +28,14 @@ namespace EnglishTelegramBot.Commands
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD);
 
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            var words = await _unitOfWork.WordRepository.FetchWordsByCount(5);
-            await GenerateWordTrainingTable(_unitOfWork, words, user, TrainingType.Training);
+            var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchWordsByCount(5);
+            await GenerateWordTrainingTable(_unitOfWork, wordsPartOfSpeech, user, TrainingType.Training);
 
             await next(context);
         }
 
         //TODO: use CQRS
-        public static async Task GenerateWordTrainingTable(IUnitOfWork unitOfWork, IEnumerable<Word> words, User user, TrainingType trainingType)
+        public static async Task GenerateWordTrainingTable(IUnitOfWork unitOfWork, IEnumerable<WordPartOfSpeech> wordsPartOfSpeech, User user, TrainingType trainingType)
         {
             var wordTrainingSet = new WordTrainingSet
             {
@@ -46,12 +46,12 @@ namespace EnglishTelegramBot.Commands
             await unitOfWork.WordTrainingSetRepository.CreateAsync(wordTrainingSet);
             await unitOfWork.SaveChangesAsync();
 
-            foreach (var word in words)
+            foreach (var wordPartOfSpeech in wordsPartOfSpeech)
             {
                 var wordTraining = new WordTraining
                 {
                     WordTrainingSetId = wordTrainingSet.Id,
-                    WordId = word.Id,
+                    WordId = wordPartOfSpeech.WordId,
                     IsFinished = false
                 };
                 await unitOfWork.WordTrainingRepository.CreateAsync(wordTraining);

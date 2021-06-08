@@ -23,8 +23,8 @@ namespace EnglishTelegramBot.Commands
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD);
 
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            var words = await _unitOfWork.WordRepository.FetchWordsByCount(10);
-            await LearnWordCommand.GenerateWordTrainingTable(_unitOfWork, words, user, TrainingType.Test10);
+            var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchWordsByCount(10);
+            await LearnWordCommand.GenerateWordTrainingTable(_unitOfWork, wordsPartOfSpeech, user, TrainingType.Test10);
 
             await next(context);
         }

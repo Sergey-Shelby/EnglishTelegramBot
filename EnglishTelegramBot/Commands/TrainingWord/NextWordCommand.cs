@@ -32,50 +32,52 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                 return;
             }
 
-            var rightWord = words[0];
+            var rightWordPartOfSpeech = words[0];
+            var rightThemeWords = await _unitOfWork.ThemeWordsRepository.FetchByPartOfSpeechId(rightWordPartOfSpeech.Id);
+
 			words = words.OrderBy(x => Guid.NewGuid()).ToList();
 
             var rkm = new ReplyKeyboardMarkup(new KeyboardButton[][]
                 {
-                    new KeyboardButton[] { words[0].EnglishWord, words[1].EnglishWord },
-                    new KeyboardButton[] { words[2].EnglishWord, words[3].EnglishWord },
+                    new KeyboardButton[] { words[0].Word.EnglishWord, words[1].Word.EnglishWord },
+                    new KeyboardButton[] { words[2].Word.EnglishWord, words[3].Word.EnglishWord },
                 });
 
-            await context.ReplyAsync($"Текущее слово: {rightWord.RussianWord}", rkm);
+            await context.ReplyAsync($"Текущее слово: {rightWordPartOfSpeech.Word.RussianWord} ({rightWordPartOfSpeech.PartOfSpeech.Name.ToLower()}, {rightThemeWords.Theme.Name.ToLower()})", rkm);
 
-            _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, rightWord);
+            _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, rightWordPartOfSpeech.Word);
         }
 
         /// <summary>
         /// Fetch next word from WordTraining according TrainingSet and 3 wrong words (order accordingly)
         /// If next word not exist return null.
         /// </summary>
-        private async Task<IList<Word>> FetchNextWords(User user)
+        private async Task<IList<WordPartOfSpeech>> FetchNextWords(User user)
         {
             var currentWord = await GetCurrentWordAsync(_unitOfWork, user);
             if (currentWord == null)
                 return null;
 
-            var wrongWords = await _unitOfWork.WordRepository.FetchWordsByCount(3);
+            var wrongWords = await _unitOfWork.WordPartOfSpeechRepository.FetchWordsByCount(3);
             wrongWords.Insert(0, currentWord);
             return wrongWords;
         }
 
         //TODO: Split to SQRS Query
-        public static async Task<Word> GetCurrentWordAsync(IUnitOfWork unitOfWork, User user)
+        public async Task<WordPartOfSpeech> GetCurrentWordAsync(IUnitOfWork unitOfWork, User user)
         {
             var currentWord = await GetCurrentWordTrainingAsync(unitOfWork, user);
-            return currentWord?.Word;
+            return currentWord != null? await _unitOfWork.WordPartOfSpeechRepository.FetchByWordId(currentWord.WordId): null;
         }
 
         //TODO: Split to SQRS Query
         public static async Task<WordTraining> GetCurrentWordTrainingAsync(IUnitOfWork unitOfWork, User user)
         {
-            var trainingSets = await unitOfWork.WordTrainingSetRepository.FetchAllAsync();
-            var currentSet = trainingSets.OrderByDescending(x => x.CreatedDate).Where(x => x.UserId == user.Id).FirstOrDefault();
-            var currentWordTrainings = await unitOfWork.WordTrainingRepository.FetchBySetAsync(currentSet.Id);
-            return currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
-        }
+			var trainingSets = await unitOfWork.WordTrainingSetRepository.FetchAllAsync();
+			var currentSet = trainingSets.OrderByDescending(x => x.CreatedDate).Where(x => x.UserId == user.Id).FirstOrDefault();
+			var currentWordTrainings = await unitOfWork.WordTrainingRepository.FetchBySetAsync(currentSet.Id);
+			return currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
+		}
 
     }
 }
