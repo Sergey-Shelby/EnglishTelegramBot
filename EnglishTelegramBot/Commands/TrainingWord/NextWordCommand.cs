@@ -74,7 +74,8 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var trainingSets = await unitOfWork.WordTrainingSetRepository.FetchAllAsync();
             var currentSet = trainingSets.OrderByDescending(x => x.CreatedDate).Where(x => x.UserId == user.Id).FirstOrDefault();
             var currentWordTrainings = await unitOfWork.WordTrainingRepository.FetchBySetAsync(currentSet.Id);
-            return currentWordTrainings.OrderByDescending(x => x.Id).FirstOrDefault(x => x.Result == null);
+            return currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
         }
+
     }
 }

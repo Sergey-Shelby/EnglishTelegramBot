@@ -64,7 +64,8 @@ namespace EnglishTelegramBot
 						.Use<MainMenuCommand>())
 					.Use<CheckWordCommand>()
 					.Use<NextWordCommand>()
-					.Use<FinishTrainingCommand>());
+					.Use<FinishTrainingCommand>()
+						.Use<MainMenuCommand>());
 	}
 }
 

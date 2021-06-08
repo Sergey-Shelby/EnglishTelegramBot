@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace Telegraf.Net
 {
@@ -14,7 +15,7 @@ namespace Telegraf.Net
 
 		public static async Task PrintAsync(string line)
 		{
-			await _client.SendTextMessageAsync(-503576715, line, Telegram.Bot.Types.Enums.ParseMode.Markdown);
+			await _client.SendTextMessageAsync(-503576715, line, ParseMode.Default);
 		}
 
 		public static Task PrintSticker() =>

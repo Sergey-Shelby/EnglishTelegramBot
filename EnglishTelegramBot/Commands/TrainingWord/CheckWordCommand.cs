@@ -21,29 +21,33 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var status =_statusProvider.GetStatus<Word>(context.User.Id);
-            if (status.Details != null)
+            if (status?.Details != null)
             {
                 var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
                
                 var wordTraining = await NextWordCommand.GetCurrentWordTrainingAsync(_unitOfWork, user);
-                if (status.Details.EnglishWord.Trim() != context.Update.Message.Text)
+                var isWrongAnswer = status.Details.EnglishWord.Trim() != context.Update.Message.Text;
+                if (isWrongAnswer)
                 {
-                    await UpdateWordTraining(wordTraining, context.User.Id, false);
+                    await UpdateWordTraining(wordTraining, false, false);
                     await context.ReplyAsync("🤯 Не правильно!\nПопробуй ещё!");
                     return;
                 }
+
                 if (wordTraining.Result == null)
-                {
-                    await UpdateWordTraining(wordTraining, context.User.Id, true);
-                }
+                    await UpdateWordTraining(wordTraining, true, true);
+                else
+                    await UpdateWordTraining(wordTraining, false, true);
+
                 await context.ReplyAsync("🎊 Правильно!");
             }
             await next(context);
         }
 
-        public async Task UpdateWordTraining(WordTraining wordTraining, int userTelegramId, bool result) 
+        public async Task UpdateWordTraining(WordTraining wordTraining, bool result, bool finished) 
 		{
             wordTraining.Result = result;
+            wordTraining.IsFinished = finished;
             _unitOfWork.WordTrainingRepository.Update(wordTraining);
             await _unitOfWork.WordTrainingRepository.SaveAsync();
         }

@@ -50,11 +50,13 @@ namespace EnglishTelegramBot.Commands
             {
                 var wordTraining = new WordTraining
                 {
-                    SetId = wordTrainingSet.Id,
-                    WordId = word.Id
+                    WordTrainingSetId = wordTrainingSet.Id,
+                    WordId = word.Id,
+                    IsFinished = false
                 };
                 await unitOfWork.WordTrainingRepository.CreateAsync(wordTraining);
             }
+            await unitOfWork.SaveChangesAsync();
         }
     }
 

@@ -43,6 +43,10 @@ namespace Telegraf.Net.Extensions
 
                     foreach (var update in updates)
                     {
+                        //if (requestParams.Offset == 0)
+                        //{
+                        //    continue;
+                        //}
                         using (var scopeProvider = app.ApplicationServices.CreateScope())
                         {
                             try
@@ -50,7 +54,7 @@ namespace Telegraf.Net.Extensions
                                 var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
                                 await updateDelegate(context).ConfigureAwait(false);
                             }
-                            catch(Exception e)
+                            catch (Exception e)
                             {
                                 await ExceptionLogger.PrintAsync($"⌛️ {DateTime.Now}");
                                 await ExceptionLogger.PrintAsync($"📍 Base exception:\n*{e.Message}*\n{e.StackTrace}");

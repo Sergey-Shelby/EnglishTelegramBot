@@ -8,8 +8,9 @@ namespace EnglishTelegramBot.DomainCore.Entities
 	{
 		public int Id { get; set; }
 		public int WordId { get; set; }
-		public int SetId { get; set; }
+		public int WordTrainingSetId { get; set; }
 		public bool? Result { get; set; }
+		public bool IsFinished { get; set; }
 		public virtual Word Word {get; set;}
 	}
 }
