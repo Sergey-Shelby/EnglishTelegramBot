@@ -25,25 +25,26 @@ namespace EnglishTelegramBot.Commands
             var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
 
             await context.PinMessageAsync(message);
-            _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, TrainingType.Training);
+            _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD);
 
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
             var words = await _unitOfWork.WordRepository.FetchWordsByCount(5);
-            await GenerateWordTrainingTable(words, user);
+            await GenerateWordTrainingTable(_unitOfWork, words, user, TrainingType.Training);
 
             await next(context);
         }
 
-        private async Task GenerateWordTrainingTable(IEnumerable<Word> words, User user)
+        //TODO: use CQRS
+        public static async Task GenerateWordTrainingTable(IUnitOfWork unitOfWork, IEnumerable<Word> words, User user, TrainingType trainingType)
         {
             var wordTrainingSet = new WordTrainingSet
             {
-                Name = TrainingType.Training.ToString(),
+                Name = trainingType.ToString(),
                 CreatedDate = DateTime.Now,
                 UserId = user.Id
             };
-            await _unitOfWork.WordTrainingSetRepository.CreateAsync(wordTrainingSet);
-            await _unitOfWork.SaveChangesAsync();
+            await unitOfWork.WordTrainingSetRepository.CreateAsync(wordTrainingSet);
+            await unitOfWork.SaveChangesAsync();
 
             foreach (var word in words)
             {
@@ -52,7 +53,7 @@ namespace EnglishTelegramBot.Commands
                     SetId = wordTrainingSet.Id,
                     WordId = word.Id
                 };
-                await _unitOfWork.WordTrainingRepository.CreateAsync(wordTraining);
+                await unitOfWork.WordTrainingRepository.CreateAsync(wordTraining);
             }
         }
     }
