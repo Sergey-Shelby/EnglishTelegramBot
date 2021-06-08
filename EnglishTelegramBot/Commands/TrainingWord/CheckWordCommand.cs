@@ -24,12 +24,11 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (status.Details != null)
             {
                 var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-                var wordTraining = await _unitOfWork.WordTrainingRepository.FetchByWordIdAndUserId(status.Details.Id, user.Id);
-
+               
+                var wordTraining = await NextWordCommand.GetCurrentWordTrainingAsync(_unitOfWork, user);
                 if (status.Details.EnglishWord.Trim() != context.Update.Message.Text)
                 {
                     await UpdateWordTraining(wordTraining, context.User.Id, false);
-
                     await context.ReplyAsync("🤯 Не правильно!\nПопробуй ещё!");
                     return;
                 }
@@ -41,11 +40,10 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             }
             await next(context);
         }
+
         public async Task UpdateWordTraining(WordTraining wordTraining, int userTelegramId, bool result) 
 		{
             wordTraining.Result = result;
-            //wordTraining.FinishedTime = DateTime.Now;
-            //var user = await _unitOfWork.UserRepository.FetchByTelegramId(userTelegramId);
             _unitOfWork.WordTrainingRepository.Update(wordTraining);
             await _unitOfWork.WordTrainingRepository.SaveAsync();
         }

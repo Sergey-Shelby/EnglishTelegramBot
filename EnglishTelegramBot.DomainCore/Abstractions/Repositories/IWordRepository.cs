@@ -6,6 +6,6 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
     public interface IWordRepository : IBaseRepository<Word>
     {
-        Task<List<Word>> FetchFourWords();
+        Task<List<Word>> FetchWordsByCount(int count);
     }
 }

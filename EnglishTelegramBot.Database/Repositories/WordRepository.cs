@@ -17,9 +17,9 @@ namespace EnglishTelegramBot.Database.Repositories
 			_dbset = englishContext.Set<Word>();
 		}
 
-		public async Task<List<Word>> FetchFourWords()
+		public async Task<List<Word>> FetchWordsByCount(int count)
 		{
-			return await _dbset.OrderBy(x => Guid.NewGuid()).Take(4).ToListAsync();
+			return await _dbset.OrderBy(x => Guid.NewGuid()).Take(count).ToListAsync();
 		}
 	}
 }
