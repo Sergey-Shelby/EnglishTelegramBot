@@ -24,7 +24,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (status.Details != null)
             {
                 var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-                var wordTraining = await _unitOfWork.WordTrainigRepository.FetchByWordIdAndUserId(status.Details.Id, user.Id);
+                var wordTraining = await _unitOfWork.WordTrainingRepository.FetchByWordIdAndUserId(status.Details.Id, user.Id);
 
                 if (status.Details.EnglishWord.Trim() != context.Update.Message.Text)
                 {
@@ -44,10 +44,10 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         public async Task UpdateWordTraining(WordTraining wordTraining, int userTelegramId, bool result) 
 		{
             wordTraining.Result = result;
-            wordTraining.FinishedTime = DateTime.Now;
+            //wordTraining.FinishedTime = DateTime.Now;
             //var user = await _unitOfWork.UserRepository.FetchByTelegramId(userTelegramId);
-            _unitOfWork.WordTrainigRepository.Update(wordTraining);
-            await _unitOfWork.WordTrainigRepository.SaveAsync();
+            _unitOfWork.WordTrainingRepository.Update(wordTraining);
+            await _unitOfWork.WordTrainingRepository.SaveAsync();
         }
     }
 }

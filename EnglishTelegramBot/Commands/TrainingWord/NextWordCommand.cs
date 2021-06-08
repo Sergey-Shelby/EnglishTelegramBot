@@ -29,13 +29,13 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var rightWord = words[0];
 
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            await _unitOfWork.WordTrainigRepository.CreateAsync(new WordTraining()
+            await _unitOfWork.WordTrainingRepository.CreateAsync(new WordTraining()
             {
                 WordId = rightWord.Id,
-                UserId = user.Id,
-                CreationTime = DateTime.Now
+                //UserId = user.Id,
+                //CreationTime = DateTime.Now
             });
-			await _unitOfWork.WordTrainigRepository.SaveAsync();
+			await _unitOfWork.WordTrainingRepository.SaveAsync();
 
 			words = words.OrderBy(x => Guid.NewGuid()).ToList();
 
