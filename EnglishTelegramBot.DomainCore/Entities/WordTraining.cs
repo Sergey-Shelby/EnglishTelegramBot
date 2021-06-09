@@ -9,7 +9,10 @@ namespace EnglishTelegramBot.DomainCore.Entities
 		public int Id { get; set; }
 		public int WordId { get; set; }
 		public int WordTrainingSetId { get; set; }
-		public bool? Result { get; set; }
+		public bool? RussianSelect { get; set; }
+		public bool? EnglishSelect { get; set; }
+		public bool? InputEnglish { get; set; }
+		public bool? InputRussian { get; set; }
 		public bool IsFinished { get; set; }
 		public virtual Word Word {get; set; }
 		public virtual WordTrainingSet WordTrainingSet { get; set; }

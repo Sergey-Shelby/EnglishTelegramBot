@@ -34,7 +34,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                     return;
                 }
 
-                if (wordTraining.Result == null)
+                if (wordTraining.RussianSelect == null)
                     await UpdateWordTraining(wordTraining, true, true);
                 else
                     await UpdateWordTraining(wordTraining, false, true);
@@ -46,7 +46,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 
         public async Task UpdateWordTraining(WordTraining wordTraining, bool result, bool finished) 
 		{
-            wordTraining.Result = result;
+            wordTraining.RussianSelect = result;
             wordTraining.IsFinished = finished;
             _unitOfWork.WordTrainingRepository.Update(wordTraining);
             await _unitOfWork.WordTrainingRepository.SaveAsync();
