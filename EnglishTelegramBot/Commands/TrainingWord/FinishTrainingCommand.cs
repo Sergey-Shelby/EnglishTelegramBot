@@ -25,7 +25,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var wordTrainingSet = await _unitOfWork.WordTrainingSetRepository.FetchLastByUserId(user.Id);
             var wordTraining = await _unitOfWork.WordTrainingRepository.FetchBySetAsync(wordTrainingSet.Id);
 
-            double wordTrainingTrueAnswerCount = wordTraining.Where(x => x.Result == true).Count();
+            double wordTrainingTrueAnswerCount = wordTraining.Where(x => x.RussianSelect == true).Count();
             var procent = Math.Truncate(wordTrainingTrueAnswerCount / wordTraining.Count() * 100);
 
             var messageList = new StringBuilder();
@@ -35,7 +35,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (procent < 100)
             {
                 messageList.Append($"Повторите следующие слова:\n");
-                wordTraining.Where(y => y.Result == false).ToList().ForEach(x => messageList.AppendLine($"{x.Word.EnglishWord} — {x.Word.RussianWord}"));
+                wordTraining.Where(y => y.RussianSelect == false).ToList().ForEach(x => messageList.AppendLine($"{x.Word.EnglishWord} — {x.Word.RussianWord}"));
             }
 
             await context.ReplyAsync($"{messageList}");
