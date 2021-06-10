@@ -22,6 +22,7 @@ namespace EnglishTelegramBot.Database.Common
 		private IWordPartOfSpeechDataRepository _lazyIWordPartOfSpeechDataRepository;
 		private IThemeWordsRepository _lazyIThemeWordsRepository;
 		private IWordTrainingSetRepository _lazyWordTrainingSetRepository;
+		private ILearnWordRepository _lazyLearnWordRepository; 
 
 		public IWordRepository WordRepository => _lazyWorkRepository?? new WordRepository(_englishContext);
 		public IThemeRepository ThemeRepository => _lazyThemeRepository ?? new ThemeRepository(_englishContext);
@@ -32,6 +33,7 @@ namespace EnglishTelegramBot.Database.Common
 		public IWordPartOfSpeechDataRepository WordPartOfSpeechDataRepository => _lazyIWordPartOfSpeechDataRepository ?? new WordPartOfSpeechDataRepository(_englishContext);
 		public IThemeWordsRepository ThemeWordsRepository => _lazyIThemeWordsRepository ?? new ThemeWordsRepository(_englishContext);
 		public IWordTrainingSetRepository WordTrainingSetRepository => _lazyWordTrainingSetRepository ?? new WordTrainingSetRepository(_englishContext);
+		public ILearnWordRepository LearnWordRepository => _lazyLearnWordRepository ?? new LearnWordRepository(_englishContext);
 
 		public async Task SaveChangesAsync()
 		{
