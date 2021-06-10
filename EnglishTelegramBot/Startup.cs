@@ -12,12 +12,17 @@ using EnglishTelegramBot.Commands.TrainingWord;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Extensions;
+using System.Reflection;
+using EnglishTelegramBot.Services;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.Providers;
 
 namespace EnglishTelegramBot
 {
 	public class Startup
 	{ 
 		private IConfiguration _configuration { get; }
+		public static Assembly DomainAssembly => typeof(Dispatcher).Assembly;
 
 		public Startup(IConfiguration configuration)
 		{
@@ -26,6 +31,10 @@ namespace EnglishTelegramBot
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddScopedHandlers(DomainAssembly);
+			services.AddScoped<IDispatcher, Dispatcher>();
+			services.AddScoped<IUserManager, UserManager>();
+			services.AddScoped<IContextPrincipal, ContextPrincipal>();
 			services.Configure<BotOptions>(_configuration.GetSection("BotOptions"));
 			services.AddSingleton<IStatusProvider>(x => new StatusProvider());
 			services.AddScoped<IUnitOfWork>(x => new UnitOfWork(new EnglishContext()));
@@ -62,8 +71,8 @@ namespace EnglishTelegramBot
 					.MapWhen(When.TextMessageEquals("!stop"), x => x//.Or(When.CheckCountWordTraining()), x => x
 						.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>())
-					.Use<CheckWordCommand>()
-					.Use<NextWordCommand>()
+					.Use<CheckSelectWordCommand>()
+					.Use<NextWordSelectTypeCommand>()
 					.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>());
 	}

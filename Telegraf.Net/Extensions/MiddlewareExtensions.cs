@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EnglishTelegramBot.DomainCore.Abstractions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
@@ -43,14 +44,13 @@ namespace Telegraf.Net.Extensions
 
                     foreach (var update in updates)
                     {
-                        //if (requestParams.Offset == 0)
-                        //{
-                        //    continue;
-                        //}
                         using (var scopeProvider = app.ApplicationServices.CreateScope())
                         {
                             try
                             {
+                                var contextPrincipal = (IContextPrincipal)scopeProvider.ServiceProvider.GetService(typeof(IContextPrincipal));
+                                contextPrincipal.TelegramUserId = update?.Message?.From?.Id ?? default;
+
                                 var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
                                 await updateDelegate(context).ConfigureAwait(false);
                             }

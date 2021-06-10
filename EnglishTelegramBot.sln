@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnglishTelegramBot", "EnglishTelegramBot\EnglishTelegramBot.csproj", "{4E56024F-FC82-44D0-BEB9-F7C8B829F865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telegraf.Net", "Telegraf.Net\Telegraf.Net.csproj", "{E566E73B-31FD-4FCE-8A2E-FCB1F7954AAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegraf.Net", "Telegraf.Net\Telegraf.Net.csproj", "{E566E73B-31FD-4FCE-8A2E-FCB1F7954AAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishTelegramBot.DomainCore", "EnglishTelegramBot.DomainCore\EnglishTelegramBot.DomainCore.csproj", "{5CCF4CE1-8819-4F80-A7A4-B00A33C96136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnglishTelegramBot.DomainCore", "EnglishTelegramBot.DomainCore\EnglishTelegramBot.DomainCore.csproj", "{5CCF4CE1-8819-4F80-A7A4-B00A33C96136}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishTelegramBot.Database", "EnglishTelegramBot.Database\EnglishTelegramBot.Database.csproj", "{AC816BDC-908F-498A-ABA4-13C9B36D8249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnglishTelegramBot.Database", "EnglishTelegramBot.Database\EnglishTelegramBot.Database.csproj", "{AC816BDC-908F-498A-ABA4-13C9B36D8249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishTelegramBot.Services", "EnglishTelegramBot.Services\EnglishTelegramBot.Services.csproj", "{4007C7BD-0D5C-4F25-AB56-2FD2AC35F7B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{AC816BDC-908F-498A-ABA4-13C9B36D8249}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC816BDC-908F-498A-ABA4-13C9B36D8249}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC816BDC-908F-498A-ABA4-13C9B36D8249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4007C7BD-0D5C-4F25-AB56-2FD2AC35F7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4007C7BD-0D5C-4F25-AB56-2FD2AC35F7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4007C7BD-0D5C-4F25-AB56-2FD2AC35F7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4007C7BD-0D5C-4F25-AB56-2FD2AC35F7B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,8 @@
 ﻿using EnglishTelegramBot.Constants;
 using EnglishTelegramBot.DomainCore.Abstractions;
-using EnglishTelegramBot.DomainCore.Entities;
-using System;
-using System.Collections.Generic;
+using EnglishTelegramBot.DomainCore.Enums;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.WordTrainings;
 using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
@@ -14,10 +14,12 @@ namespace EnglishTelegramBot.Commands
     {
         IStatusProvider _statusProvider;
         IUnitOfWork _unitOfWork;
-        public LearnWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
+        IDispatcher _dispatcher;
+        public LearnWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
+            _dispatcher = dispatcher;
         }
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
@@ -27,42 +29,13 @@ namespace EnglishTelegramBot.Commands
             await context.PinMessageAsync(message);
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD);
 
-            var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchWordsByCount(5);
-            await GenerateWordTrainingTable(_unitOfWork, wordsPartOfSpeech, user, TrainingType.Training);
+            var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullByCount(5);
+
+            var createWordTrainingSetCommand = new CreateWordTrainingSetCommand { WordsPartOfSpeech = wordsPartOfSpeech, TrainingType = TrainingTypeSet.Training };
+            await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
 
             await next(context);
         }
-
-        //TODO: use CQRS
-        public static async Task GenerateWordTrainingTable(IUnitOfWork unitOfWork, IEnumerable<WordPartOfSpeech> wordsPartOfSpeech, User user, TrainingType trainingType)
-        {
-            var wordTrainingSet = new WordTrainingSet
-            {
-                Name = trainingType.ToString(),
-                CreatedDate = DateTime.Now,
-                UserId = user.Id
-            };
-            await unitOfWork.WordTrainingSetRepository.CreateAsync(wordTrainingSet);
-            await unitOfWork.SaveChangesAsync();
-
-            foreach (var wordPartOfSpeech in wordsPartOfSpeech)
-            {
-                var wordTraining = new WordTraining
-                {
-                    WordTrainingSetId = wordTrainingSet.Id,
-                    WordId = wordPartOfSpeech.WordId,
-                    IsFinished = false
-                };
-                await unitOfWork.WordTrainingRepository.CreateAsync(wordTraining);
-            }
-            await unitOfWork.SaveChangesAsync();
-        }
     }
 
-    public enum TrainingType
-    {
-        Test10,
-        Training
-    }
 }

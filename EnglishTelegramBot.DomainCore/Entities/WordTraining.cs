@@ -7,7 +7,7 @@ namespace EnglishTelegramBot.DomainCore.Entities
 	public class WordTraining
 	{
 		public int Id { get; set; }
-		public int WordId { get; set; }
+		public int WordPartOfSpeechId { get; set; }
 		public int WordTrainingSetId { get; set; }
 		public bool? RussianSelect { get; set; }
 		public bool? EnglishSelect { get; set; }

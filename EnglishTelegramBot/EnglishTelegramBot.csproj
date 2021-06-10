@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EnglishTelegramBot.Database\EnglishTelegramBot.Database.csproj" />
     <ProjectReference Include="..\EnglishTelegramBot.DomainCore\EnglishTelegramBot.DomainCore.csproj" />
+    <ProjectReference Include="..\EnglishTelegramBot.Services\EnglishTelegramBot.Services.csproj" />
     <ProjectReference Include="..\Telegraf.Net\Telegraf.Net.csproj" />
   </ItemGroup>
 

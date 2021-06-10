@@ -6,7 +6,7 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
 	public interface IWordPartOfSpeechRepository : IBaseRepository<WordPartOfSpeech>
 	{
-		Task<List<WordPartOfSpeech>> FetchWordsByCount(int count);
-		Task<WordPartOfSpeech> FetchByWordId(int wordId);
+		Task<List<WordPartOfSpeech>> FetchFullByCount(int count);
+		Task<WordPartOfSpeech> FetchFullByWordId(int wordId);
 	}
 }

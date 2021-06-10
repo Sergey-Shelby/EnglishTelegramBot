@@ -1,6 +1,8 @@
 ﻿using EnglishTelegramBot.Constants;
 using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.WordTrainings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,20 +14,22 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace EnglishTelegramBot.Commands.TrainingWord
 {
-    public class NextWordCommand : BaseCommand
+    public class NextWordSelectTypeCommand : BaseCommand
     {
-        IStatusProvider _statusProvider;
-        IUnitOfWork _unitOfWork;
-        public NextWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
+        private IStatusProvider _statusProvider;
+        private IUnitOfWork _unitOfWork;
+        private IDispatcher _dispatcher;
+        public NextWordSelectTypeCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
+            _dispatcher = dispatcher;
         }
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            var words = await FetchNextWords(user);
+            var words = await FetchNextWords();
             if (words == null)
             {
                 await next(context);
@@ -52,32 +56,15 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         /// Fetch next word from WordTraining according TrainingSet and 3 wrong words (order accordingly)
         /// If next word not exist return null.
         /// </summary>
-        private async Task<IList<WordPartOfSpeech>> FetchNextWords(User user)
+        private async Task<IList<WordPartOfSpeech>> FetchNextWords()
         {
-            var currentWord = await GetCurrentWordAsync(_unitOfWork, user);
+            var currentWord = await _dispatcher.Dispatch<WordPartOfSpeech>(new FetchNextWordPartOfSpeechForTrainingQuery());
             if (currentWord == null)
                 return null;
 
-            var wrongWords = await _unitOfWork.WordPartOfSpeechRepository.FetchWordsByCount(3);
+            var wrongWords = await _unitOfWork.WordPartOfSpeechRepository.FetchFullByCount(3);
             wrongWords.Insert(0, currentWord);
             return wrongWords;
         }
-
-        //TODO: Split to SQRS Query
-        public async Task<WordPartOfSpeech> GetCurrentWordAsync(IUnitOfWork unitOfWork, User user)
-        {
-            var currentWord = await GetCurrentWordTrainingAsync(unitOfWork, user);
-            return currentWord != null? await _unitOfWork.WordPartOfSpeechRepository.FetchByWordId(currentWord.WordId): null;
-        }
-
-        //TODO: Split to SQRS Query
-        public static async Task<WordTraining> GetCurrentWordTrainingAsync(IUnitOfWork unitOfWork, User user)
-        {
-			var trainingSets = await unitOfWork.WordTrainingSetRepository.FetchAllAsync();
-			var currentSet = trainingSets.OrderByDescending(x => x.CreatedDate).Where(x => x.UserId == user.Id).FirstOrDefault();
-			var currentWordTrainings = await unitOfWork.WordTrainingRepository.FetchBySetAsync(currentSet.Id);
-			return currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
-		}
-
     }
 }

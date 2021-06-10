@@ -1,6 +1,6 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
-using System;
+using EnglishTelegramBot.DomainCore.Enums;
 using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
@@ -8,11 +8,17 @@ using Telegraf.Net.Commands;
 
 namespace EnglishTelegramBot.Commands.TrainingWord
 {
-    public class CheckWordCommand : BaseCommand
+    public class WordTrainingStatus
+    {
+        public Word Word { get; set; }
+        public TrainingType TrainingType { get; set; }
+    }
+
+    public class CheckSelectWordCommand : BaseCommand
     {
         IStatusProvider _statusProvider;
         IUnitOfWork _unitOfWork;
-        public CheckWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
+        public CheckSelectWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
@@ -25,7 +31,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             {
                 var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
                
-                var wordTraining = await NextWordCommand.GetCurrentWordTrainingAsync(_unitOfWork, user);
+                var wordTraining = await NextWordSelectTypeCommand.GetCurrentWordTrainingAsync(_unitOfWork, user);
                 var isWrongAnswer = status.Details.EnglishWord.Trim() != context.Update.Message.Text;
                 if (isWrongAnswer)
                 {

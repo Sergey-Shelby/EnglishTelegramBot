@@ -17,11 +17,11 @@ namespace EnglishTelegramBot.Database.Repositories
 			_dbset = englishContext.Set<WordPartOfSpeech>();
 		}
 
-		public async Task<List<WordPartOfSpeech>> FetchWordsByCount(int count)
+		public async Task<List<WordPartOfSpeech>> FetchFullByCount(int count)
 		{
 			return await _dbset.Include(x => x.Word).Include(y => y.PartOfSpeech).OrderBy(x => Guid.NewGuid()).Take(count).ToListAsync();
 		}
-		public async Task<WordPartOfSpeech> FetchByWordId(int wordId)
+		public async Task<WordPartOfSpeech> FetchFullByWordId(int wordId)
 		{
 			return await _dbset.Include(x => x.Word).Include(y => y.PartOfSpeech).Where(x => x.WordId == wordId).FirstOrDefaultAsync();
 		}

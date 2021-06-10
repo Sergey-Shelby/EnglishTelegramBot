@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnglishTelegramBot.DomainCore.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +20,7 @@ namespace Telegraf.Net
         public IBotBuilder Use<TCommand>() where TCommand : IAnswerCommand
         {
             _components.Add(next =>
-                context =>
-                    ((IAnswerCommand)context.Services.GetService(typeof(TCommand))).ExecuteAsync(context, next)
+                context =>((IAnswerCommand)context.Services.GetService(typeof(TCommand))).ExecuteAsync(context, next)
             );
             return this;
         }
