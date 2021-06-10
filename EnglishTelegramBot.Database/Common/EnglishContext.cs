@@ -14,6 +14,7 @@ namespace EnglishTelegramBot.Database.Common
         public DbSet<WordPartOfSpeechData> WordPartOfSpeechData { get; set; }
         public DbSet<ThemeWords> ThemeWords { get; set; }
         public DbSet<WordTrainingSet> WordTrainingSet { get; set; }
+        public DbSet<LearnWord> LearnWord { get; set; }
 
         public EnglishContext()
         {
