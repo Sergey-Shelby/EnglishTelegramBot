@@ -35,7 +35,8 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (procent < 100)
             {
                 messageList.Append($"Повторите следующие слова:\n");
-                wordTraining.Where(y => y.RussianSelect == false).ToList().ForEach(x => messageList.AppendLine($"{x.Word.EnglishWord} — {x.Word.RussianWord}"));
+                //TODO: WordPartOfSpeech.Word.EnglishWord - invalid, need see WordPartOfSpeechData
+                wordTraining.Where(y => y.RussianSelect == false).ToList().ForEach(x => messageList.AppendLine($"{x.WordPartOfSpeech.Word.EnglishWord} — {x.WordPartOfSpeech.Word.RussianWord}"));
             }
 
             await context.ReplyAsync($"{messageList}");

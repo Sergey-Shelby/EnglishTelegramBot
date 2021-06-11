@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Services.Commands.WordTrainings
 {
-    public class CreateWordTrainingSetCommandHandler : ICommandResultHandler<CreateWordTrainingSetCommand, int>
+    public class CreateWordTrainingCommandHandler : ICommandResultHandler<CreateWordTrainingCommand, int>
     {
         private IUnitOfWork _unitOfWork;
         private IUserManager _userManager;
-        public CreateWordTrainingSetCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager)
+        public CreateWordTrainingCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
         }
 
-        public async Task<int> Handle(CreateWordTrainingSetCommand command)
+        public async Task<int> Handle(CreateWordTrainingCommand command)
         {
             var user = await _userManager.FetchCurrentUserAsync();
+
             var wordTrainingSet = new WordTrainingSet
             {
                 Name = command.TrainingType.ToString(),

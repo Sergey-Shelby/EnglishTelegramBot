@@ -29,7 +29,7 @@ namespace EnglishTelegramBot.Commands
 
             var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(10);
 
-            var createWordTrainingSetCommand = new CreateWordTrainingSetCommand { WordsPartOfSpeech = wordsPartOfSpeech, TrainingType = TrainingTypeSet.Test10 };
+            var createWordTrainingSetCommand = new CreateWordTrainingCommand { WordsPartOfSpeech = wordsPartOfSpeech, TrainingType = TrainingSetType.Test10 };
             await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
 
             await next(context);

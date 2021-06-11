@@ -1,6 +1,6 @@
 ﻿namespace EnglishTelegramBot.DomainCore.Enums
 {
-    public enum TrainingTypeSet
+    public enum TrainingSetType
     {
         Test10,
         Training

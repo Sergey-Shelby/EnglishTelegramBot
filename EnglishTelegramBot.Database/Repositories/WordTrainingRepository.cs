@@ -26,7 +26,7 @@ namespace EnglishTelegramBot.Database.Repositories
 
 		public Task<List<WordTraining>> FetchBySetAsync(int setId)
 		{
-			return _dbset.Where(x => x.WordTrainingSetId == setId).Include(x => x.Word).ToListAsync();
+			return _dbset.Where(x => x.WordTrainingSetId == setId).Include(x => x.WordPartOfSpeech).ThenInclude(x=>x.Word).ToListAsync();
 		}
 
 		//public async Task<WordTraining> FetchByWordIdAndUserId(int wordId, int userId)
