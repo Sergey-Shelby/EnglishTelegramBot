@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EnglishTelegramBot.Commands;
+using EnglishTelegramBot.DomainCore.Enums;
+using System;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Helpers;
@@ -20,5 +22,12 @@ namespace EnglishTelegramBot.Extensions
                 var statusCode = statusProvider.GetStatusCode(context.Update.Message.From.Id);
                 return statusCode == status;
                 };
+
+        public static Predicate<ITelegrafContext> HasTrainingType(Predicate<TrainingType?> predicate) =>
+         (ITelegrafContext context) => {
+             var statusProvider = (IStatusProvider)context.Services.GetService(typeof(IStatusProvider));
+             var status = statusProvider.GetStatus<WordTrainingState>(context.Update.Message.From.Id);
+             return predicate(status.Details.TrainingType);
+         };
     }
 }

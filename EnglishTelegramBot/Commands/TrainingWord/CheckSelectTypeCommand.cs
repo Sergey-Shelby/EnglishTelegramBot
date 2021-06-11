@@ -12,18 +12,12 @@ using Telegraf.Net.Commands;
 
 namespace EnglishTelegramBot.Commands.TrainingWord
 {
-    public class WordTrainingStatus
-    {
-        public Word Word { get; set; }
-        public TrainingType TrainingType { get; set; }
-    }
-
-    public class CheckSelectWordCommand : BaseCommand
+    public class CheckSelectTypeCommand : BaseCommand
     {
         private IStatusProvider _statusProvider;
         private IUnitOfWork _unitOfWork;
         private IDispatcher _dispatcher;
-        public CheckSelectWordCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
+        public CheckSelectTypeCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
@@ -33,7 +27,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var status =_statusProvider.GetStatus<WordTrainingState>(context.User.Id);
-            if (status?.Details.TrainingType != null)
+            if (status.Details.IsStarted == true)
             {
                 //var currentWordTrainings = await _dispatcher.Dispatch<List<WordTraining>>(new FetchCurrentWordTrainingsQuery());
                 //var nextWordTraining = currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);

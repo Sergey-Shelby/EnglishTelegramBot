@@ -16,6 +16,7 @@ using System.Reflection;
 using EnglishTelegramBot.Services;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.Providers;
+using EnglishTelegramBot.DomainCore.Enums;
 
 namespace EnglishTelegramBot
 {
@@ -75,8 +76,8 @@ namespace EnglishTelegramBot
 					.MapWhen(When.TextMessageEquals("!stop"), x => x//.Or(When.CheckCountWordTraining()), x => x
 						.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>())
-					.Use<CheckSelectWordCommand>()
-					.Use<NextWordSelectTypeCommand>()
+					.UseWhen<CheckSelectTypeCommand>(When.HasTrainingType(x => x == TrainingType.SelectRus || x == TrainingType.SelectEng))
+					.UseWhen<TrainingSelectTypeCommand>(When.HasTrainingType(x => x == TrainingType.SelectRus || x == TrainingType.SelectEng))
 					.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>());
 	}

@@ -59,9 +59,26 @@ namespace EnglishTelegramBot.Commands
     public class WordTrainingState
     {
         public IEnumerable<WordTraining> WordTrainings { get; set; }
-        public WordTraining CurrentWordTraining { get; set; }
-        public TrainingType? TrainingType { get; set; }
         public TrainingSetType TrainingSetType { get; set; }
+        /// <summary>
+        /// Flag for Check word command
+        /// </summary>
+        public bool IsStarted { get; set; }
+        public TrainingType? TrainingType => WordTrainings switch
+         {
+             IEnumerable<WordTraining> trainings when trainings.Any(x => x.RussianSelect == null) => DomainCore.Enums.TrainingType.SelectRus,
+             IEnumerable<WordTraining> trainings when trainings.Any(x => x.EnglishSelect == null) => DomainCore.Enums.TrainingType.SelectEng,
+             IEnumerable<WordTraining> trainings when trainings.Any(x => x.InputEnglish == null) => DomainCore.Enums.TrainingType.Input,
+             _ => null
+         };
+
+        public WordTraining CurrentWordTraining => TrainingType switch
+          {
+              DomainCore.Enums.TrainingType.SelectRus => WordTrainings.FirstOrDefault(x => x.RussianSelect == null),
+              DomainCore.Enums.TrainingType.SelectEng => WordTrainings.FirstOrDefault(x => x.EnglishSelect == null),
+              DomainCore.Enums.TrainingType.Input => WordTrainings.FirstOrDefault(x => x.InputRussian == null),
+              _ => null
+          };
     }
 
 }
