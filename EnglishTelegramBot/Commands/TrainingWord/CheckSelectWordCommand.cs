@@ -32,26 +32,26 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            var status =_statusProvider.GetStatus<Word>(context.User.Id);
-            if (status?.Details != null)
+            var status =_statusProvider.GetStatus<WordTrainingState>(context.User.Id);
+            if (status?.Details.TrainingType != null)
             {
-                var currentWordTrainings = await _dispatcher.Dispatch<List<WordTraining>>(new FetchCurrentWordTrainingsQuery());
-                var nextWordTraining = currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
+                //var currentWordTrainings = await _dispatcher.Dispatch<List<WordTraining>>(new FetchCurrentWordTrainingsQuery());
+                //var nextWordTraining = currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
 
-                var isWrongAnswer = status.Details.EnglishWord.Trim() != context.Update.Message.Text;
-                if (isWrongAnswer)
-                {
-                    await UpdateWordTraining(nextWordTraining, false, false);
-                    await context.ReplyAsync("🤯 Не правильно!\nПопробуй ещё!");
-                    return;
-                }
+                //var isWrongAnswer = status.Details.EnglishWord.Trim() != context.Update.Message.Text;
+                //if (isWrongAnswer)
+                //{
+                //    await UpdateWordTraining(nextWordTraining, false, false);
+                //    await context.ReplyAsync("🤯 Не правильно!\nПопробуй ещё!");
+                //    return;
+                //}
 
-                if (nextWordTraining.RussianSelect == null)
-                    await UpdateWordTraining(nextWordTraining, true, true);
-                else
-                    await UpdateWordTraining(nextWordTraining, false, true);
+                //if (nextWordTraining.RussianSelect == null)
+                //    await UpdateWordTraining(nextWordTraining, true, true);
+                //else
+                //    await UpdateWordTraining(nextWordTraining, false, true);
 
-                await context.ReplyAsync("🎊 Правильно!");
+                //await context.ReplyAsync("🎊 Правильно!");
             }
             await next(context);
         }

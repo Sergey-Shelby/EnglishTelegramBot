@@ -60,7 +60,7 @@ namespace EnglishTelegramBot.Commands
     {
         public IEnumerable<WordTraining> WordTrainings { get; set; }
         public WordTraining CurrentWordTraining { get; set; }
-        public TrainingType TrainingType { get; set; }
+        public TrainingType? TrainingType { get; set; }
         public TrainingSetType TrainingSetType { get; set; }
     }
 
