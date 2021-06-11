@@ -27,7 +27,7 @@ namespace EnglishTelegramBot.Commands
             await context.ReplyAsync("Вы вошли в режим тестирования слов 🖋");
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD);
 
-            var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullByCount(10);
+            var wordsPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(10);
 
             var createWordTrainingSetCommand = new CreateWordTrainingSetCommand { WordsPartOfSpeech = wordsPartOfSpeech, TrainingType = TrainingTypeSet.Test10 };
             await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);

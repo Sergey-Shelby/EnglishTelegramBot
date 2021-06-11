@@ -26,7 +26,7 @@ namespace EnglishTelegramBot.Services.Queries.WordTrainings
 
             var wordTrainings = await _dispatcher.Dispatch<List<WordTraining>>(new FetchCurrentWordTrainingsQuery());
             var nextWordTraining = wordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
-            var nextWordPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullByWordId(nextWordTraining.WordPartOfSpeechId);
+            var nextWordPartOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullByWordIdAsync(nextWordTraining.WordPartOfSpeechId);
 
             return nextWordPartOfSpeech;
         }

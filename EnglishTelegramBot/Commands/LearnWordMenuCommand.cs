@@ -7,14 +7,14 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace EnglishTelegramBot.Commands
 {
-    public class MainMenuCommand : BaseCommand
+    public class LearnWordMenuCommand : BaseCommand
     {
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            await context.ReplyAsync("🏠 Main menu", CreateMainMenuKeyboard());
+            await context.ReplyAsync("Пожалуйста, выберите тип изучения", CreateLearnMenuKeyboard());
         }
 
-        private static ReplyKeyboardMarkup CreateMainMenuKeyboard()
+        private static ReplyKeyboardMarkup CreateLearnMenuKeyboard()
         {
             var rkm = new ReplyKeyboardMarkup();
             rkm.Keyboard =
@@ -22,22 +22,19 @@ namespace EnglishTelegramBot.Commands
                 {
                     new KeyboardButton[]
                     {
-                        Message.LEARN_WORD
+                        Message.LEARN_NEW_WORDS
                     },
                     new KeyboardButton[]
                     {
-                        Message.TEST_WORD
+                        Message.REPEAT_LEARN
                     },
                     new KeyboardButton[]
                     {
-                        Message.USERS
-                    },
-                    new KeyboardButton[]
-                    {
-                        Message.STATISTICS
+                        Message.MAIN_MENU
                     }
                 };
             return rkm;
         }
     }
+
 }

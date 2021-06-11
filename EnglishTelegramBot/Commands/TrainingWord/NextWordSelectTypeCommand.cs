@@ -62,7 +62,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (currentWord == null)
                 return null;
 
-            var wrongWords = await _unitOfWork.WordPartOfSpeechRepository.FetchFullByCount(3);
+            var wrongWords = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(3);
             wrongWords.Insert(0, currentWord);
             return wrongWords;
         }
