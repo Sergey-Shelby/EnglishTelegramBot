@@ -41,8 +41,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                 new KeyboardButton[] { selectWords[0].WordPartOfSpeechDatas[0].Word, selectWords[1].WordPartOfSpeechDatas[0].Word },
                 new KeyboardButton[] { selectWords[2].WordPartOfSpeechDatas[0].Word, selectWords[3].WordPartOfSpeechDatas[0].Word }
             });
-
-            await context.ReplyAsync($"Текущее слово: {currentWordTraining.WordPartOfSpeech.Word.RussianWord} ({currentWordTraining.WordPartOfSpeech.PartOfSpeech.Name.ToLower()})", rkm);
+            await context.ReplyAsync($"Текущее слово: {currentWordTraining.WordPartOfSpeech.Word.EnglishWord} ({currentWordTraining.WordPartOfSpeech.PartOfSpeech.Name.ToLower()})", rkm);
         }
     }
 }
