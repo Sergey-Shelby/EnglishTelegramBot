@@ -47,7 +47,7 @@ namespace EnglishTelegramBot.Commands
                 {
                     WordPartOfSpeech = x,
                     WordTrainingSetId = setId
-                }),
+                }).ToList(),
                 TrainingSetType = TrainingSetType.Training
             };
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
