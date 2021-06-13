@@ -13,5 +13,6 @@ namespace Telegraf.Net.Abstractions
         Update Update { get; }
         IServiceProvider Services { get; }
         Task<Message> ReplyAsync(string text, IReplyMarkup replyMarkup = null);
+        Task<Message> ReplyAsyncWithHtml(string text, IReplyMarkup replyMarkup = null);
     }
 }

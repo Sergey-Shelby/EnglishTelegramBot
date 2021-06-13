@@ -15,6 +15,8 @@ namespace Telegraf.Net
         public Update Update { get; set; }
         public Task<Message> ReplyAsync(string text, IReplyMarkup replyMarkup = null) => 
             Bot.SendTextMessageAsync(User.Id, text, replyMarkup: replyMarkup);
+        public Task<Message> ReplyAsyncWithHtml(string text, IReplyMarkup replyMarkup = null) =>
+            Bot.SendTextMessageAsync(User.Id, text, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: replyMarkup);
 
         public Task PinMessageAsync(Message message) =>
             Bot.PinChatMessageAsync(message.Chat.Id, message.MessageId);

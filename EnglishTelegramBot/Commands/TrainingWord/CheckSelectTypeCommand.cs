@@ -26,32 +26,27 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            var status =_statusProvider.GetStatus<WordTrainingState>(context.User.Id);
-            if (status.Details.IsStarted == true)
+            var state =_statusProvider.GetStatus<WordTrainingState>(context.User.Id);
+            if (state.Details.IsStarted == true)
             {
-				//var currentWordTrainings = await _dispatcher.Dispatch<List<WordTraining>>(new FetchCurrentWordTrainingsQuery());
-				//var nextWordTraining = currentWordTrainings.OrderBy(x => x.Id).FirstOrDefault(x => x.IsFinished == false);
-
-				var isWrongAnswer = status.Details.CurrentWordTraining.WordPartOfSpeech.Word.RussianWord.Trim() != context.Update.Message.Text;
-				if (isWrongAnswer)
+                var correctAnswerRus = state.Details.CurrentWordTraining.WordPartOfSpeech.Word.RussianWord.Trim();
+                var correctAnswerEng = state.Details.CurrentWordTraining.WordPartOfSpeech.Word.EnglishWord.Trim();
+                var isWrongAnswerRus = correctAnswerRus != context.Update.Message.Text.ToLower();
+                var isWrongAnswerEng = correctAnswerEng != context.Update.Message.Text.ToLower();
+                var trainingType = state.Details.TrainingType;
+                var message = string.Empty;
+				if (trainingType == TrainingType.SelectRus)
 				{
-                    status.Details.CurrentWordTraining.RussianSelect = true;
-                    var status2 = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
-                    await context.ReplyAsync("🤯 Не правильно!");
-				}
-                else
-                {
-                    status.Details.CurrentWordTraining.RussianSelect = true;
-                    await context.ReplyAsync("🎊 Правильно!");
+                    state.Details.CurrentWordTraining.RussianSelect = isWrongAnswerRus? false: true;
+                    message = isWrongAnswerRus? $"Неправильно! Правильный ответ: <b>{correctAnswerRus}</b>" : "Правильно!";
                 }
-
-				//if (nextWordTraining.RussianSelect == null)
-				//	await UpdateWordTraining(nextWordTraining, true, true);
-				//else
-				//	await UpdateWordTraining(nextWordTraining, false, true);
-
-				//await context.ReplyAsync("🎊 Правильно!");
-			}
+                else if (trainingType == TrainingType.SelectEng)
+                {
+                    state.Details.CurrentWordTraining.EnglishSelect = isWrongAnswerEng ? false : true;
+                    message = isWrongAnswerEng? $"Неправильно! Правильный ответ: <b>{correctAnswerEng}</b>" : "Правильно!";
+                }
+                await context.ReplyAsyncWithHtml(message);
+            }
             await next(context);
         }
 
