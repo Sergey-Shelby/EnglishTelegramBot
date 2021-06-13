@@ -1,4 +1,5 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
+using EnglishTelegramBot.DomainCore.Entities;
 using System;
 using System.Linq;
 using System.Text;
@@ -21,12 +22,22 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-            var wordTrainingSet = await _unitOfWork.WordTrainingSetRepository.FetchLastByUserId(user.Id);
-            var wordTraining = await _unitOfWork.WordTrainingRepository.FetchBySetAsync(wordTrainingSet.Id);
+            var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
+			//-----------
+			foreach (var item in state.Details.WordTrainings)
+			{
+                item.WordPartOfSpeechId = item.WordPartOfSpeech.Id;
+				await _unitOfWork.WordTrainingRepository.CreateAsync(item);
+                await _unitOfWork.WordTrainingRepository.SaveAsync();
+            }
+            //------------
 
-            double wordTrainingTrueAnswerCount = wordTraining.Where(x => x.RussianSelect == true).Count();
-            var procent = Math.Truncate(wordTrainingTrueAnswerCount / wordTraining.Count() * 100);
+            var listWrongWords = state.Details.WordTrainings
+                .Where(x => x.InputEnglish == false || x.EnglishSelect == false || x.RussianSelect == false)
+                .ToList();
+
+            double wordTrainingTrueAnswerCount = 5 - listWrongWords.Count();
+            var procent = Math.Truncate(wordTrainingTrueAnswerCount / 5 * 100);
 
             var messageList = new StringBuilder();
 
@@ -36,10 +47,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             {
                 messageList.Append($"Повторите следующие слова:\n");
                 //TODO: WordPartOfSpeech.Word.EnglishWord - invalid, need see WordPartOfSpeechData
-                wordTraining.Where(y => y.RussianSelect == false).ToList().ForEach(x => messageList.AppendLine($"{x.WordPartOfSpeech.Word.EnglishWord} — {x.WordPartOfSpeech.Word.RussianWord}"));
+                listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word} — {x.WordPartOfSpeech.Word.RussianWord}</i>"));
             }
-
-            await context.ReplyAsync($"{messageList}");
+            await context.ReplyAsyncWithHtml($"{messageList}");
             await context.UnpinMessageAsync();
             _statusProvider.ClearStatus(context.User.Id);
             await next(context);

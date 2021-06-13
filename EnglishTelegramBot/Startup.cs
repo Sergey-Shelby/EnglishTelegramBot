@@ -76,8 +76,10 @@ namespace EnglishTelegramBot
 					.MapWhen(When.TextMessageEquals("!stop"), x => x//.Or(When.CheckCountWordTraining()), x => x
 						.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>())
+					.UseWhen<CheckInputTypeCommand>(When.HasTrainingType(x => x == TrainingType.Input))
 					.UseWhen<CheckSelectTypeCommand>(When.HasTrainingType(x => x == TrainingType.SelectRus || x == TrainingType.SelectEng))
 					.UseWhen<TrainingSelectTypeCommand>(When.HasTrainingType(x => x == TrainingType.SelectRus || x == TrainingType.SelectEng))
+					.UseWhen<TrainingInputTypeCommand>(When.HasTrainingType(x => x == TrainingType.Input))
 					.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>());
 	}

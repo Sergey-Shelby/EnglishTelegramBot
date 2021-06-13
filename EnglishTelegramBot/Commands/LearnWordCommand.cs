@@ -76,7 +76,7 @@ namespace EnglishTelegramBot.Commands
           {
               DomainCore.Enums.TrainingType.SelectRus => WordTrainings.FirstOrDefault(x => x.RussianSelect == null),
               DomainCore.Enums.TrainingType.SelectEng => WordTrainings.FirstOrDefault(x => x.EnglishSelect == null),
-              DomainCore.Enums.TrainingType.Input => WordTrainings.FirstOrDefault(x => x.InputRussian == null),
+              DomainCore.Enums.TrainingType.Input => WordTrainings.FirstOrDefault(x => x.InputEnglish == null),
               _ => null
           };
     }
