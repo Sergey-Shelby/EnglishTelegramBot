@@ -2,6 +2,7 @@
 using EnglishTelegramBot.DomainCore.Entities;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.DomainCore.Models.WordTrainings;
+using EnglishTelegramBot.DomainCore.Models.LearnWords;
 using System;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                 messageList.Append($"Повторите следующие слова:\n");
                 listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word} — {x.WordPartOfSpeech.Word.RussianWord}</i>"));
             }
+
+            await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
+
             await context.ReplyAsyncWithHtml($"{messageList}");
             await context.UnpinMessageAsync();
             _statusProvider.ClearStatus(context.User.Id);
