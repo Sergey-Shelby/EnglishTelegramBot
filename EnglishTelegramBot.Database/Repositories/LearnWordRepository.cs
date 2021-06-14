@@ -17,12 +17,27 @@ namespace EnglishTelegramBot.Database.Repositories
 		{
 			_dbSet = englishContext.Set<LearnWord>();
 		}
-		public async Task<List<LearnWord>> FetchWordPartOfSpeechForRepeat(int take, int userId)
+		public async Task<List<LearnWord>> FetchWordPartOfSpeechForRepeat(int userId)
 		{
 			return await _dbSet.Include(x => x.WordPartOfSpeech)
-					   .Where(x => x.UserId == userId && x.NextLevelDate <= DateTime.Now)
+					   .Where(x => x.UserId == userId && x.NextLevelDate >= DateTime.Now)
 					   .OrderBy(x => Guid.NewGuid())
-					   .Take(take)
+					   .ToListAsync();
+		}
+		public async Task<List<int>> FetchWordPartOfSpeechNotInRepeat(int userId)
+		{
+			return await _dbSet.Include(x => x.WordPartOfSpeech)
+					   .Where(x => x.UserId == userId && x.Level >= 1)
+						.Select(u => u.WordPartOfSpeechId)
+					   .OrderBy(x => Guid.NewGuid())
+					   .ToListAsync();
+		}
+		public async Task<List<int>> FetchWordPartOfSpeechRepeat(int userId)
+		{
+			return await _dbSet.Include(x => x.WordPartOfSpeech)
+					   .Where(x => x.UserId == userId && x.NextLevelDate >= DateTime.Now)
+					   .Select(u => u.WordPartOfSpeechId)
+					   .OrderBy(x => Guid.NewGuid())
 					   .ToListAsync();
 		}
 

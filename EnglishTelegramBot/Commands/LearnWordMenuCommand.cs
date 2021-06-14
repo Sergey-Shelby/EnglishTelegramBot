@@ -52,7 +52,7 @@ namespace EnglishTelegramBot.Commands
 		private async Task<List<LearnWord>> FetchCountRepeatWords()
 		{
 			var user = await _unitOfWork.UserRepository.FetchByTelegramId(_telegrafContext.User.Id);
-			return await _unitOfWork.LearnWordRepository.FetchWordPartOfSpeechForRepeat(20, user.Id);
+			return await _unitOfWork.LearnWordRepository.FetchWordPartOfSpeechForRepeat(user.Id);
         }
     }
 
