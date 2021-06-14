@@ -1,5 +1,7 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.LearnWords;
 using System;
 using System.Linq;
 using System.Text;
@@ -14,22 +16,24 @@ namespace EnglishTelegramBot.Commands.TrainingWord
     {
         IStatusProvider _statusProvider;
         IUnitOfWork _unitOfWork;
-        public FinishTrainingCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
+        IDispatcher _dispatcher;
+        public FinishTrainingCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
+            _dispatcher = dispatcher;
         }
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
 			//-----------
-			foreach (var item in state.Details.WordTrainings)
-			{
-                item.WordPartOfSpeechId = item.WordPartOfSpeech.Id;
-				await _unitOfWork.WordTrainingRepository.CreateAsync(item);
-                await _unitOfWork.WordTrainingRepository.SaveAsync();
-            }
+			//foreach (var item in state.Details.WordTrainings)
+			//{
+   //             item.WordPartOfSpeechId = item.WordPartOfSpeech.Id;
+			//	await _unitOfWork.WordTrainingRepository.CreateAsync(item);
+   //             await _unitOfWork.WordTrainingRepository.SaveAsync();
+   //         }
             //------------
 
             var listWrongWords = state.Details.WordTrainings
@@ -49,6 +53,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                 //TODO: WordPartOfSpeech.Word.EnglishWord - invalid, need see WordPartOfSpeechData
                 listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word} — {x.WordPartOfSpeech.Word.RussianWord}</i>"));
             }
+
+            await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
+
             await context.ReplyAsyncWithHtml($"{messageList}");
             await context.UnpinMessageAsync();
             _statusProvider.ClearStatus(context.User.Id);
