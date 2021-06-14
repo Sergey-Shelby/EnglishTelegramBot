@@ -6,7 +6,7 @@ namespace Telegraf.Net
 {
 	public static class ExceptionLogger
 	{
-		private static TelegramBotClient _client;
+		private static readonly TelegramBotClient _client;
 
 		static ExceptionLogger()
 		{

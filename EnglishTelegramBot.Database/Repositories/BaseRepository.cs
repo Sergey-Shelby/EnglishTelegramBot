@@ -33,17 +33,19 @@ namespace EnglishTelegramBot.Database.Repositories
             await dbSet.AddAsync(t);
         }
 
-        public void Update(T t)
+        public Task UpdateAsync(T t)
         {
             db.Attach(t);
             db.Entry(t).State = EntityState.Modified;
+            return Task.CompletedTask;
         }
 
-        public void Delete(int id)
+        public Task DeleteAsync(int id)
         {
             T t = dbSet.Find(id);
             if (t != null)
                 dbSet.Remove(t);
+            return Task.CompletedTask;
         }
 
         public async Task SaveAsync()

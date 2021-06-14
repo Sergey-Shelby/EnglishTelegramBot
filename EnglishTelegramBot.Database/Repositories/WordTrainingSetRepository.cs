@@ -10,7 +10,7 @@ namespace EnglishTelegramBot.Database.Repositories
 {
 	public class WordTrainingSetRepository : BaseRepository<WordTrainingSet>, IWordTrainingSetRepository
 	{
-		private DbSet<WordTrainingSet> _dbset;
+		private readonly DbSet<WordTrainingSet> _dbset;
 		public WordTrainingSetRepository(EnglishContext englishContext) : base(englishContext)
 		{
 			_dbset = englishContext.Set<WordTrainingSet>();

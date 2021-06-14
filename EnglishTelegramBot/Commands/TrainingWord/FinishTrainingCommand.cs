@@ -1,5 +1,7 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.WordTrainings;
 using System;
 using System.Linq;
 using System.Text;
@@ -12,25 +14,20 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 {
     public class FinishTrainingCommand : BaseCommand
     {
-        IStatusProvider _statusProvider;
-        IUnitOfWork _unitOfWork;
-        public FinishTrainingCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork)
+        private readonly IStatusProvider _statusProvider;
+        private readonly IDispatcher _disatcher;
+
+        public FinishTrainingCommand(IStatusProvider statusProvider, IDispatcher disatcher)
         {
             _statusProvider = statusProvider;
-            _unitOfWork = unitOfWork;
+            _disatcher = disatcher;
         }
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
-			//-----------
-			foreach (var item in state.Details.WordTrainings)
-			{
-                item.WordPartOfSpeechId = item.WordPartOfSpeech.Id;
-				await _unitOfWork.WordTrainingRepository.CreateAsync(item);
-                await _unitOfWork.WordTrainingRepository.SaveAsync();
-            }
-            //------------
+
+            await _disatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
 
             var listWrongWords = state.Details.WordTrainings
                 .Where(x => x.InputEnglish == false || x.EnglishSelect == false || x.RussianSelect == false)
@@ -40,13 +37,11 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var procent = Math.Truncate(wordTrainingTrueAnswerCount / 5 * 100);
 
             var messageList = new StringBuilder();
-
             messageList.Append($"Тренировка завершена! Результат — {procent}%\n");
 
             if (procent < 100)
             {
                 messageList.Append($"Повторите следующие слова:\n");
-                //TODO: WordPartOfSpeech.Word.EnglishWord - invalid, need see WordPartOfSpeechData
                 listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word} — {x.WordPartOfSpeech.Word.RussianWord}</i>"));
             }
             await context.ReplyAsyncWithHtml($"{messageList}");

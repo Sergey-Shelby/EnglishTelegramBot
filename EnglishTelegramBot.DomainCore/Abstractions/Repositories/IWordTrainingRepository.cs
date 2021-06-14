@@ -8,6 +8,7 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 	{
 		//Task<WordTraining> FetchByWordIdAndUserId(int wordId, int userId);
 		Task<List<WordTraining>> FetchAllByUserIdAsync(int userId);
-		Task<List<WordTraining>> FetchBySetAsync(int setId);
+		Task<List<WordTraining>> FetchBySetAsync(int setId); 
+		Task<WordTraining> FetchBySetAsync(int setId, int wordPartOfSpeechId);
 	}
 }

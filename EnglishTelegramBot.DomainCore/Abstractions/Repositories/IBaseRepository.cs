@@ -9,8 +9,8 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
         Task<IEnumerable<T>> FetchAllAsync();
         Task<T> FetchByIdAsync(int id);
         Task CreateAsync(T item);
-        void Update(T item);
-        void Delete(int id);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(int id);
         Task SaveAsync();
     }
 }

@@ -21,8 +21,8 @@ using EnglishTelegramBot.DomainCore.Enums;
 namespace EnglishTelegramBot
 {
 	public class Startup
-	{ 
-		private IConfiguration _configuration { get; }
+	{
+		private readonly IConfiguration _configuration;
 		public static Assembly DomainAssembly => typeof(Dispatcher).Assembly;
 
 		public Startup(IConfiguration configuration)

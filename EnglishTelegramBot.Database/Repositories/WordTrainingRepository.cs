@@ -10,7 +10,7 @@ namespace EnglishTelegramBot.Database.Repositories
 {
 	class WordTrainingRepository : BaseRepository<WordTraining>, IWordTrainingRepository
 	{
-		private DbSet<WordTraining> _dbset;
+		private readonly DbSet<WordTraining> _dbset;
 		public WordTrainingRepository(EnglishContext englishContext) : base(englishContext) 
 		{
 			_dbset = englishContext.Set<WordTraining>();
@@ -18,21 +18,27 @@ namespace EnglishTelegramBot.Database.Repositories
 
 		public async Task<List<WordTraining>> FetchAllByUserIdAsync(int userId)
 		{
-			//return await _dbset.Include(x => x.WordTrainingSet)
-
-			//return await _dbset.Where(x => x.UserId == userId).Include(x => x.Word).ToListAsync();
-			throw new System.Exception();
+			return await _dbset
+				.Include(x => x.WordPartOfSpeech)
+				.Include(x=>x.WordTrainingSet)
+				.Where(x => x.WordTrainingSet.UserId == userId)
+				.ToListAsync();
 		}
 
 		public Task<List<WordTraining>> FetchBySetAsync(int setId)
 		{
-			return _dbset.Where(x => x.WordTrainingSetId == setId).Include(x => x.WordPartOfSpeech).ThenInclude(x=>x.Word).ToListAsync();
+			return _dbset
+				.Where(x => x.WordTrainingSetId == setId)
+				.Include(x => x.WordPartOfSpeech)
+				.ThenInclude(x=>x.Word)
+				.ToListAsync();
 		}
 
-		//public async Task<WordTraining> FetchByWordIdAndUserId(int wordId, int userId)
-		//{
-		//	//return await _dbset.FirstOrDefaultAsync(x => x.WordId == wordId && x.UserId == userId);
-		//	throw new System.Exception();
-		//}
+		public Task<WordTraining> FetchBySetAsync(int setId, int wordPartOfSpeechId)
+		{
+			return _dbset
+				.Where(x => x.WordTrainingSetId == setId && x.WordPartOfSpeechId == wordPartOfSpeechId)
+				.FirstOrDefaultAsync();
+		}
 	}
 }

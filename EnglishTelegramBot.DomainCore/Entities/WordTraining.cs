@@ -12,8 +12,6 @@ namespace EnglishTelegramBot.DomainCore.Entities
 		public bool? RussianSelect { get; set; }
 		public bool? EnglishSelect { get; set; }
 		public bool? InputEnglish { get; set; }
-		public bool? InputRussian { get; set; }
-		public bool IsFinished { get; set; }
 		public virtual WordPartOfSpeech WordPartOfSpeech { get; set; }
 		public virtual WordTrainingSet WordTrainingSet { get; set; }
 	}

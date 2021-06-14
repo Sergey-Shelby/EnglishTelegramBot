@@ -11,9 +11,10 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 {
     public class TrainingSelectTypeCommand : BaseCommand
     {
-        private IStatusProvider _statusProvider;
-        private IUnitOfWork _unitOfWork;
-        private IUserManager _manager;
+        private readonly IStatusProvider _statusProvider;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserManager _manager;
+
         public TrainingSelectTypeCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IUserManager manager)
         {
             _statusProvider = statusProvider;

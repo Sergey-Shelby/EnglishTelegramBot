@@ -9,8 +9,8 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
 {
     public class CreateWordTrainingCommandHandler : ICommandResultHandler<CreateWordTrainingCommand, int>
     {
-        private IUnitOfWork _unitOfWork;
-        private IUserManager _userManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserManager _userManager;
         public CreateWordTrainingCommandHandler(IUnitOfWork unitOfWork, IUserManager userManager)
         {
             _unitOfWork = unitOfWork;
@@ -35,8 +35,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
                 var wordTraining = new WordTraining
                 {
                     WordTrainingSetId = wordTrainingSet.Id,
-                    WordPartOfSpeechId = wordPartOfSpeech.Id,
-                    IsFinished = false
+                    WordPartOfSpeechId = wordPartOfSpeech.Id
                 };
                 await _unitOfWork.WordTrainingRepository.CreateAsync(wordTraining);
             }

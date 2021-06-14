@@ -9,7 +9,8 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
 {
     public class FetchWordPartOfSpeechForTrainingQueryHandler : IQueryHandler<FetchWordPartOfSpeechForTrainingQuery, List<WordPartOfSpeech>>
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+
         public FetchWordPartOfSpeechForTrainingQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -17,7 +18,7 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
 
         public async Task<List<WordPartOfSpeech>> Handle(FetchWordPartOfSpeechForTrainingQuery query)
         {
-            var wordPartOfSpeeches = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(5);
+            var wordPartOfSpeeches = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(2);
             return wordPartOfSpeeches;
         }
     }

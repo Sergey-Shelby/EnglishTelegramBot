@@ -10,7 +10,8 @@ namespace EnglishTelegramBot.Commands
 {
     public class UsersCommand : BaseCommand
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+
 		public UsersCommand(IUnitOfWork unitOfWork)
 		{
             _unitOfWork = unitOfWork;

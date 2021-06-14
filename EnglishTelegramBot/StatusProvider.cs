@@ -12,7 +12,7 @@ namespace EnglishTelegramBot
 
     public class StatusProvider : IStatusProvider
     {
-        private Dictionary<int, UserStatus<object>> _userStatuses;
+        private readonly Dictionary<int, UserStatus<object>> _userStatuses;
 
         public StatusProvider()
         {

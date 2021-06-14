@@ -16,9 +16,9 @@ namespace EnglishTelegramBot.Commands
 
         private static ReplyKeyboardMarkup CreateMainMenuKeyboard()
         {
-            var rkm = new ReplyKeyboardMarkup();
-            rkm.Keyboard =
-                new KeyboardButton[][]
+            var rkm = new ReplyKeyboardMarkup
+            {
+                Keyboard = new KeyboardButton[][]
                 {
                     new KeyboardButton[]
                     {
@@ -36,7 +36,8 @@ namespace EnglishTelegramBot.Commands
                     {
                         Message.STATISTICS
                     }
-                };
+                }
+            };
             return rkm;
         }
     }

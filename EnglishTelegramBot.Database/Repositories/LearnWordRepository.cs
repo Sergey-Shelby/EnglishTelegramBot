@@ -11,7 +11,8 @@ namespace EnglishTelegramBot.Database.Repositories
 {
 	public class LearnWordRepository : BaseRepository<LearnWord>, ILearnWordRepository
 	{
-		private DbSet<LearnWord> _dbSet;
+		private readonly DbSet<LearnWord> _dbSet;
+
 		public LearnWordRepository(EnglishContext englishContext) : base(englishContext)
 		{
 			_dbSet = englishContext.Set<LearnWord>();

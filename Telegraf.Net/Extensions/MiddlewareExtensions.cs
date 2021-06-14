@@ -44,7 +44,7 @@ namespace Telegraf.Net.Extensions
 
                     foreach (var update in updates)
                     {
-                        using (var scopeProvider = app.ApplicationServices.CreateScope())
+                        using var scopeProvider = app.ApplicationServices.CreateScope();
                         {
                             try
                             {
@@ -70,7 +70,7 @@ namespace Telegraf.Net.Extensions
 
                     if (updates.Length > 0)
                     {
-                        requestParams.Offset = updates[updates.Length - 1].Id + 1;
+                        requestParams.Offset = updates[^1].Id + 1;
                     }
                 }
 

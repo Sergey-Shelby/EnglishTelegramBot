@@ -12,7 +12,7 @@ namespace EnglishTelegramBot.Commands
 {
     public class LearnWordMenuCommand : BaseCommand
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 		private ITelegrafContext _telegrafContext;
         public LearnWordMenuCommand(IUnitOfWork unitOfWork)
         {
@@ -27,10 +27,10 @@ namespace EnglishTelegramBot.Commands
 
 		private async Task<ReplyKeyboardMarkup> CreateLearnMenuKeyboard()
 		{
-			var learnWords = await FetchCountRepeatWords(); 
-			var rkm = new ReplyKeyboardMarkup();
-			rkm.Keyboard =
-				new KeyboardButton[][]
+			var learnWords = await FetchCountRepeatWords();
+			var rkm = new ReplyKeyboardMarkup
+			{
+				Keyboard = new KeyboardButton[][]
 				{
 					new KeyboardButton[]
 					{
@@ -44,7 +44,8 @@ namespace EnglishTelegramBot.Commands
 					{
 						Message.MAIN_MENU
 					}
-				};
+				}
+			};
 			return rkm;
 		}
 

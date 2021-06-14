@@ -11,7 +11,7 @@ namespace EnglishTelegramBot.Database.Repositories
 {
 	public class WordPartOfSpeechRepository : BaseRepository<WordPartOfSpeech>, IWordPartOfSpeechRepository
 	{
-		private DbSet<WordPartOfSpeech> _dbset;
+		private readonly DbSet<WordPartOfSpeech> _dbset;
 		public WordPartOfSpeechRepository(EnglishContext englishContext) : base(englishContext)
 		{
 			_dbset = englishContext.Set<WordPartOfSpeech>();

@@ -12,9 +12,9 @@ namespace EnglishTelegramBot.Commands
 {
     public class WordTestCommand : BaseCommand
     {
-        private IStatusProvider _statusProvider;
-        private IUnitOfWork _unitOfWork;
-        private IDispatcher _dispatcher;
+        private readonly IStatusProvider _statusProvider;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDispatcher _dispatcher;
         public WordTestCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;

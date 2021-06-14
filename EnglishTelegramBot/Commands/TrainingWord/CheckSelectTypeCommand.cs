@@ -49,13 +49,5 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             }
             await next(context);
         }
-
-        public async Task UpdateWordTraining(WordTraining wordTraining, bool result, bool finished) 
-		{
-            wordTraining.RussianSelect = result;
-            wordTraining.IsFinished = finished;
-            _unitOfWork.WordTrainingRepository.Update(wordTraining);
-            await _unitOfWork.WordTrainingRepository.SaveAsync();
-        }
     }
 }
