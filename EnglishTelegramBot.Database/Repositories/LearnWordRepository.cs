@@ -24,5 +24,10 @@ namespace EnglishTelegramBot.Database.Repositories
 					   .Take(take)
 					   .ToListAsync();
 		}
+
+		public async Task<LearnWord> FetchByWordPartOfSpeechIdAsync(int id)
+		{
+			return await _dbSet.Where(x => x.WordPartOfSpeechId == id).FirstOrDefaultAsync();
+		}
 	}
 }
