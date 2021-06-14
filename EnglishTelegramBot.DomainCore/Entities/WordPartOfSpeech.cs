@@ -12,5 +12,6 @@ namespace EnglishTelegramBot.DomainCore.Entities
 		public virtual Word Word { get; set; }
 		public virtual PartOfSpeech PartOfSpeech { get; set; }
 		public virtual List<WordPartOfSpeechData> WordPartOfSpeechDatas { get; set; }
+		public virtual List<LearnWord> LearnWords { get; set; }
 	}
 }

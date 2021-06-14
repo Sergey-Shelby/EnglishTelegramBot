@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
 {
-    public class FetchWordPartOfSpeechForTrainingQueryHandler : IQueryHandler<FetchWordPartOfSpeechForTrainingQuery, List<WordPartOfSpeech>>
+    public class FetchWordPartOfSpeechForTrainingQueryHandler : IQueryHandler<FetchWordPartOfSpeechForTrainingQuery, IEnumerable<WordPartOfSpeech>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -16,7 +16,7 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<WordPartOfSpeech>> Handle(FetchWordPartOfSpeechForTrainingQuery query)
+        public async Task<IEnumerable<WordPartOfSpeech>> Handle(FetchWordPartOfSpeechForTrainingQuery query)
         {
             var wordPartOfSpeeches = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(2);
             return wordPartOfSpeeches;

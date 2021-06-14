@@ -60,6 +60,7 @@ namespace EnglishTelegramBot
 			new BotBuilder()
 				.UseWhen<LearnWordMenuCommand>(When.TextMessageEquals(Message.LEARN_WORD))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_NEW_WORDS))
+				.UseWhen<LearnWordRepeatCommand>(When.TextMessageContains(Message.REPEAT_LEARN))
 				.UseWhen<WordTestCommand>(When.TextMessageEquals(Message.TEST_WORD))
 
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))

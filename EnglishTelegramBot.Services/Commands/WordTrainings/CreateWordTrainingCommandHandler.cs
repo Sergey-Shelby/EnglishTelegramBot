@@ -3,6 +3,7 @@ using EnglishTelegramBot.DomainCore.Entities;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.DomainCore.Models.WordTrainings;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Services.Commands.WordTrainings
@@ -20,7 +21,8 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
         public async Task<int> Handle(CreateWordTrainingCommand command)
         {
             var user = await _userManager.FetchCurrentUserAsync();
-
+            var learnWordsPartOfSpeechIds = await _unitOfWork.LearnWordRepository.FetchWordPartOfSpeechNotInRepeat(user.Id);
+            var wordPartOfSpeeches = command.WordsPartOfSpeech.Where(p => !learnWordsPartOfSpeechIds.Contains(p.Id));
             var wordTrainingSet = new WordTrainingSet
             {
                 Name = command.TrainingType.ToString(),
@@ -30,7 +32,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
             await _unitOfWork.WordTrainingSetRepository.CreateAsync(wordTrainingSet);
             await _unitOfWork.SaveChangesAsync();
 
-            foreach (var wordPartOfSpeech in command.WordsPartOfSpeech)
+            foreach (var wordPartOfSpeech in wordPartOfSpeeches)
             {
                 var wordTraining = new WordTraining
                 {
