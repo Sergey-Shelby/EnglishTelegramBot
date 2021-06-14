@@ -36,7 +36,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
                         SelectEng = (bool)word.EnglishSelect ? 1: 0,
                         Input = (bool)word.InputEnglish ? 1: 0,
                     };
-                    await Update(word, learnWordNew);
+                    Update(word, learnWordNew);
                     await _unitOfWork.LearnWordRepository.CreateAsync(learnWordNew);
 				}
                 else
@@ -45,16 +45,15 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
                     learnWord.SelectEng = (bool)word.EnglishSelect ? learnWord.SelectEng + 0.6 : learnWord.SelectEng - 0.3;
                     learnWord.SelectRus = (bool)word.RussianSelect ? learnWord.SelectRus + 0.6 : learnWord.SelectRus - 0.3;
                     learnWord.Input = (bool)word.InputEnglish ? learnWord.Input + 0.6 : learnWord.Input - 0.3;
-                    learnWord.Level = 1;
-                    await Update(word, learnWord);
-                    _unitOfWork.LearnWordRepository.Update(learnWord);
+                    Update(word, learnWord);
+                    await _unitOfWork.LearnWordRepository.UpdateAsync(learnWord);
                 }
             }
             await _unitOfWork.SaveChangesAsync();
         }
-        
-        public async Task Update(WordTraining word, LearnWord learnWord)
-		{
+
+        public void Update(WordTraining word, LearnWord learnWord)
+        {
             if ((bool)word.RussianSelect && (bool)word.EnglishSelect && (bool)word.InputEnglish)
             {
                 learnWord.NextLevelDate = DateTime.Today.AddDays(5);

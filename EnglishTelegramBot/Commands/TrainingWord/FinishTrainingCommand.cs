@@ -1,6 +1,4 @@
-﻿using EnglishTelegramBot.DomainCore.Abstractions;
-using EnglishTelegramBot.DomainCore.Entities;
-using EnglishTelegramBot.DomainCore.Framework;
+﻿using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.DomainCore.Models.WordTrainings;
 using EnglishTelegramBot.DomainCore.Models.LearnWords;
 using System;
@@ -16,19 +14,20 @@ namespace EnglishTelegramBot.Commands.TrainingWord
     public class FinishTrainingCommand : BaseCommand
     {
         private readonly IStatusProvider _statusProvider;
-        private readonly IDispatcher _disatcher;
+        private readonly IDispatcher _dispatcher;
 
-        public FinishTrainingCommand(IStatusProvider statusProvider, IDispatcher disatcher)
+        public FinishTrainingCommand(IStatusProvider statusProvider, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
-            _disatcher = disatcher;
+            _dispatcher = dispatcher;
         }
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
 
-            await _disatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
+            await _dispatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
+            await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
 
             var listWrongWords = state.Details.WordTrainings
                 .Where(x => x.InputEnglish == false || x.EnglishSelect == false || x.RussianSelect == false)
@@ -45,8 +44,6 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                 messageList.Append($"Повторите следующие слова:\n");
                 listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word} — {x.WordPartOfSpeech.Word.RussianWord}</i>"));
             }
-
-            await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
 
             await context.ReplyAsyncWithHtml($"{messageList}");
             await context.UnpinMessageAsync();
