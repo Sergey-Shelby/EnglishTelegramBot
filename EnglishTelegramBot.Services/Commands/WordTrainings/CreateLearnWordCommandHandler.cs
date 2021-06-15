@@ -31,28 +31,43 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
                         UserId = user.Id,
                         WordPartOfSpeechId = word.WordPartOfSpeech.Id,
                         Level = 0,
-                        NextLevelDate = DateTime.Today.AddMinutes(3),
+                        NextLevelDate = null,
 						SelectRus = (bool)word.RussianSelect ? 1 : 0,
                         SelectEng = (bool)word.EnglishSelect ? 1: 0,
                         Input = (bool)word.InputEnglish ? 1: 0,
                     };
-                    Update(learnWordNew);
+                    CheckIncreaseLevel(learnWordNew);
                     await _unitOfWork.LearnWordRepository.CreateAsync(learnWordNew);
 				}
                 else
 				{
-                    learnWord.NextLevelDate = DateTime.Now.AddDays(1);
-                    learnWord.SelectEng = (bool)word.EnglishSelect ? learnWord.SelectEng + 0.6 : learnWord.SelectEng - 0.3;
-                    learnWord.SelectRus = (bool)word.RussianSelect ? learnWord.SelectRus + 0.6 : learnWord.SelectRus - 0.3;
-                    learnWord.Input = (bool)word.InputEnglish ? learnWord.Input + 0.6 : learnWord.Input - 0.3;
-                    Update(learnWord);
+                    learnWord.SelectEng = ChangeProgress(learnWord, word.EnglishSelect, learnWord.SelectEng);
+                    learnWord.SelectRus = ChangeProgress(learnWord, word.RussianSelect, learnWord.SelectRus);
+                    learnWord.Input = ChangeProgress(learnWord, word.InputEnglish, learnWord.Input);
+
+                    CheckIncreaseLevel(learnWord);
                     await _unitOfWork.LearnWordRepository.UpdateAsync(learnWord);
                 }
             }
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(LearnWord learnWord)
+        private double ChangeProgress(LearnWord learnWord, bool? result, double currentValue)
+        {
+            if (result == true)
+            {
+                var progressCoef = learnWord.Level == 0 ? 0.6 : 1;
+                return currentValue + progressCoef;
+            }
+            else
+            {
+                var progressCoef = -0.3d;
+                var newValue = currentValue + progressCoef;
+                return newValue > 0 ? newValue : 0;
+            }
+        }
+
+        public void CheckIncreaseLevel(LearnWord learnWord)
         {
             if (learnWord.Level == 3)
                 return;
@@ -60,7 +75,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
             var necessaryProgress = learnWord.Level + 1;
             if (learnWord.SelectRus >= necessaryProgress && learnWord.SelectRus >= necessaryProgress && learnWord.Input >= necessaryProgress)
             {
-                learnWord.NextLevelDate = DateTime.Today.AddDays(5);
+                learnWord.NextLevelDate = DateTime.Now.AddMinutes(3);
                 learnWord.Level++;
             }
         }

@@ -8,5 +8,7 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 	{
 		Task<List<WordPartOfSpeech>> FetchFullAsync(int count);
 		Task<WordPartOfSpeech> FetchFullByWordIdAsync(int wordId);
+
+		Task<IEnumerable<WordPartOfSpeech>> FetchAllFullAsync();
 	}
 }

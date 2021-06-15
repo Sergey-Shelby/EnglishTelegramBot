@@ -10,7 +10,7 @@ namespace EnglishTelegramBot.DomainCore.Entities
 		public int UserId { get; set; }
 		public int WordPartOfSpeechId { get; set; }
 		public int Level { get; set; }
-		public DateTime NextLevelDate { get; set; }
+		public DateTime? NextLevelDate { get; set; }
 		public double SelectRus { get; set; }
 		public double SelectEng { get; set; }
 		public double Input { get; set; }

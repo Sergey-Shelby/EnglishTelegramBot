@@ -29,7 +29,7 @@ namespace EnglishTelegramBot.Commands
             var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
             await context.PinMessageAsync(message);
 
-            var wordPartOfSpeeches = await _dispatcher.Dispatch<List<WordPartOfSpeech>>(new FetchWordPartOfSpeechForTrainingQuery());
+            var wordPartOfSpeeches = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForTrainingQuery());
 
             //TODO: Next part of method repeat in each type training.
             //Bad practice

@@ -31,5 +31,11 @@ namespace EnglishTelegramBot.Database.Repositories
 		{
 			return await _dbset.Include(x => x.Word).Include(y => y.PartOfSpeech).Where(x => x.WordId == wordId).FirstOrDefaultAsync();
 		}
+
+		public async Task<IEnumerable<WordPartOfSpeech>> FetchAllFullAsync()
+		{
+			return await _dbset.Include(x => x.Word).Include(y => y.PartOfSpeech).Include(x=>x.WordPartOfSpeechDatas).ToListAsync();
+		}
+		
 	}
 }

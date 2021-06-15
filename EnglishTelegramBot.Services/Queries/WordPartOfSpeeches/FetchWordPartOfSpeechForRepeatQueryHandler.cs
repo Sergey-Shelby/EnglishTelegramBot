@@ -24,10 +24,14 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
             var user = await _userManager.FetchCurrentUserAsync();
 
             var learnWords = await _unitOfWork.LearnWordRepository.FetchByUserId(user.Id);
-            var wodrsPartOfSpeechForRepeat = learnWords
+            var wodrsPartOfSpeechForRepeatIds = learnWords
                 .Where(x => x.Level >= 1 && x.NextLevelDate < DateTime.Now)
+                //.OrderBy(x=> Guid.NewGuid())
                 .Take(2)
-                .Select(x=>x.WordPartOfSpeech);
+                .Select(x=>x.WordPartOfSpeechId);
+
+            var allWordPartOfSpeeches = await _unitOfWork.WordPartOfSpeechRepository.FetchAllFullAsync();
+            var wodrsPartOfSpeechForRepeat = allWordPartOfSpeeches.Where(x => wodrsPartOfSpeechForRepeatIds.Contains(x.Id));
 
             return wodrsPartOfSpeechForRepeat;
         }
