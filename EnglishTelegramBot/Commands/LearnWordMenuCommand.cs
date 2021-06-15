@@ -28,31 +28,32 @@ namespace EnglishTelegramBot.Commands
 			await context.ReplyAsync("Пожалуйста, выберите тип изучения", replyKeyboardMarkup);
         }
 
-		private async Task<ReplyKeyboardMarkup> CreateLearnMenuKeyboard()
-		{
-			var countWordsForRepeat = await CountWordsForRepeat();
-			var rkm = new ReplyKeyboardMarkup
-			{
-				Keyboard = new KeyboardButton[][]
-				{
-					new KeyboardButton[]
-					{
-						Message.LEARN_NEW_WORDS
-					},
-					new KeyboardButton[]
-					{
-						$"{Message.REPEAT_LEARN} ({countWordsForRepeat})"
-					},
-					new KeyboardButton[]
-					{
-						Message.MAIN_MENU
-					}
-				}
-			};
-			return rkm;
-		}
+        private async Task<ReplyKeyboardMarkup> CreateLearnMenuKeyboard()
+        {
+            var countWordsForRepeat = await CountWordsForRepeat();
+            var messageLearnWord = countWordsForRepeat != 0 ? $"{Message.REPEAT_LEARN} ({countWordsForRepeat})" : Message.REPEAT_LEARN;
+            var rkm = new ReplyKeyboardMarkup
+            {
+                Keyboard = new KeyboardButton[][]
+              {
+          new KeyboardButton[]
+          {
+            Message.LEARN_NEW_WORDS
+          },
+          new KeyboardButton[]
+          {
+            messageLearnWord
+          },
+          new KeyboardButton[]
+          {
+            Message.MAIN_MENU
+          }
+              }
+            };
+            return rkm;
+        }
 
-		private async Task<int> CountWordsForRepeat()
+        private async Task<int> CountWordsForRepeat()
 		{
 			var wordsForRepeat = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForRepeatQuery());
 			return wordsForRepeat.Count();
