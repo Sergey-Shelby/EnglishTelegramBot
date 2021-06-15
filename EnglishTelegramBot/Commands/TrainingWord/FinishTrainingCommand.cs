@@ -33,11 +33,16 @@ namespace EnglishTelegramBot.Commands.TrainingWord
                 .Where(x => x.InputEnglish == false || x.EnglishSelect == false || x.RussianSelect == false)
                 .ToList();
 
-            double wordTrainingTrueAnswerCount = 5 - listWrongWords.Count();
-            var procent = Math.Truncate(wordTrainingTrueAnswerCount / 5 * 100);
+            var countRusSelectTrue = state.Details.WordTrainings.Where(x => x.RussianSelect == true).Count();
+            var countEngSelectTrue = state.Details.WordTrainings.Where(x => x.EnglishSelect == true).Count();
+            var countEngInputTrue = state.Details.WordTrainings.Where(x => x.InputEnglish == true).Count();
+
+
+            double sumCount= (countRusSelectTrue + countEngSelectTrue + countEngInputTrue);
+            var procent = Math.Truncate(sumCount / (3 * state.Details.WordTrainings.Count()) * 100);
 
             var messageList = new StringBuilder();
-            messageList.Append($"Тренировка завершена! Результат — {procent}%\n");
+            messageList.Append($"Тренировка завершена!\nРезультат — {procent}%\n");
 
             if (procent < 100)
             {
