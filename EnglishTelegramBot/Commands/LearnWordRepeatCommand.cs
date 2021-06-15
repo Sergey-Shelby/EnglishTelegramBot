@@ -17,12 +17,10 @@ namespace EnglishTelegramBot.Commands
 {
 	public class LearnWordRepeatCommand : BaseCommand
     {
-        private readonly IUnitOfWork _unitOfWork;
         IStatusProvider _statusProvider;
         IDispatcher _dispatcher;
-        public LearnWordRepeatCommand(IUnitOfWork unitOfWork, IStatusProvider statusProvider, IDispatcher dispatcher)
+        public LearnWordRepeatCommand(IStatusProvider statusProvider, IDispatcher dispatcher)
         {
-            _unitOfWork = unitOfWork;
             _statusProvider = statusProvider;
             _dispatcher = dispatcher;
         }
@@ -32,12 +30,7 @@ namespace EnglishTelegramBot.Commands
             var message = await context.ReplyAsync("Тренеровка повтора слов запущена 🖋\nОтправьте !stop для завершения 🏁");
             await context.PinMessageAsync(message);
 
-            //var wordPartOfSpeeches = await _dispatcher.Dispatch<List<WordPartOfSpeech>>(new FetchWordPartOfSpeechForTrainingQuery());
-
-			var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-			var repeatWordsPartOfSpeechIds = await _unitOfWork.LearnWordRepository.FetchWordPartOfSpeechRepeat(user.Id);
-            var wordsOfSpeech = await _unitOfWork.WordPartOfSpeechRepository.FetchFullAsync(600);
-            var wordPartOfSpeeches = wordsOfSpeech.Where(p => repeatWordsPartOfSpeechIds.Contains(p.Id)).ToList();  
+            var wordPartOfSpeeches = await _dispatcher.Dispatch<List<WordPartOfSpeech>>(new FetchWordPartOfSpeechForRepeatQuery());
 
             //TODO: Next part of method repeat in each type training.
             //Bad practice

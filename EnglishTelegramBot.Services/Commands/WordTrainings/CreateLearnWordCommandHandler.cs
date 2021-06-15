@@ -31,12 +31,12 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
                         UserId = user.Id,
                         WordPartOfSpeechId = word.WordPartOfSpeech.Id,
                         Level = 0,
-                        NextLevelDate = DateTime.Today.AddDays(1),
+                        NextLevelDate = DateTime.Today.AddMinutes(3),
 						SelectRus = (bool)word.RussianSelect ? 1 : 0,
                         SelectEng = (bool)word.EnglishSelect ? 1: 0,
                         Input = (bool)word.InputEnglish ? 1: 0,
                     };
-                    Update(word, learnWordNew);
+                    Update(learnWordNew);
                     await _unitOfWork.LearnWordRepository.CreateAsync(learnWordNew);
 				}
                 else
@@ -45,16 +45,20 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
                     learnWord.SelectEng = (bool)word.EnglishSelect ? learnWord.SelectEng + 0.6 : learnWord.SelectEng - 0.3;
                     learnWord.SelectRus = (bool)word.RussianSelect ? learnWord.SelectRus + 0.6 : learnWord.SelectRus - 0.3;
                     learnWord.Input = (bool)word.InputEnglish ? learnWord.Input + 0.6 : learnWord.Input - 0.3;
-                    Update(word, learnWord);
+                    Update(learnWord);
                     await _unitOfWork.LearnWordRepository.UpdateAsync(learnWord);
                 }
             }
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(WordTraining word, LearnWord learnWord)
+        public void Update(LearnWord learnWord)
         {
-            if ((bool)word.RussianSelect && (bool)word.EnglishSelect && (bool)word.InputEnglish)
+            if (learnWord.Level == 3)
+                return;
+
+            var necessaryProgress = learnWord.Level + 1;
+            if (learnWord.SelectRus >= necessaryProgress && learnWord.SelectRus >= necessaryProgress && learnWord.Input >= necessaryProgress)
             {
                 learnWord.NextLevelDate = DateTime.Today.AddDays(5);
                 learnWord.Level++;

@@ -1,7 +1,10 @@
 ﻿using EnglishTelegramBot.Constants;
 using EnglishTelegramBot.DomainCore.Abstractions;
 using EnglishTelegramBot.DomainCore.Entities;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.WordPartOfSpeeches;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
@@ -12,22 +15,22 @@ namespace EnglishTelegramBot.Commands
 {
     public class LearnWordMenuCommand : BaseCommand
     {
-        private readonly IUnitOfWork _unitOfWork;
-		private ITelegrafContext _telegrafContext;
-        public LearnWordMenuCommand(IUnitOfWork unitOfWork)
+		private readonly IDispatcher _dispatcher;
+
+		public LearnWordMenuCommand(IDispatcher dispatcher)
         {
-            _unitOfWork = unitOfWork;
-        }
+			_dispatcher = dispatcher;
+
+		}
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
 		{
-			_telegrafContext = context;
 			var replyKeyboardMarkup = await CreateLearnMenuKeyboard();
 			await context.ReplyAsync("Пожалуйста, выберите тип изучения", replyKeyboardMarkup);
         }
 
 		private async Task<ReplyKeyboardMarkup> CreateLearnMenuKeyboard()
 		{
-			var learnWords = await FetchCountRepeatWords();
+			var countWordsForRepeat = await CountWordsForRepeat();
 			var rkm = new ReplyKeyboardMarkup
 			{
 				Keyboard = new KeyboardButton[][]
@@ -38,7 +41,7 @@ namespace EnglishTelegramBot.Commands
 					},
 					new KeyboardButton[]
 					{
-						$"{Message.REPEAT_LEARN} ({learnWords.Count})"
+						$"{Message.REPEAT_LEARN} ({countWordsForRepeat})"
 					},
 					new KeyboardButton[]
 					{
@@ -49,11 +52,11 @@ namespace EnglishTelegramBot.Commands
 			return rkm;
 		}
 
-		private async Task<List<LearnWord>> FetchCountRepeatWords()
+		private async Task<int> CountWordsForRepeat()
 		{
-			var user = await _unitOfWork.UserRepository.FetchByTelegramId(_telegrafContext.User.Id);
-			return await _unitOfWork.LearnWordRepository.FetchWordPartOfSpeechForRepeat(user.Id);
-        }
+			var wordsForRepeat = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForRepeatQuery());
+			return wordsForRepeat.Count();
+		}
     }
 
 }

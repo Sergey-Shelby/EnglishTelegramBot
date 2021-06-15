@@ -7,5 +7,6 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 	public interface ILearnWordRepository : IBaseRepository<LearnWord>
 	{
 		Task<LearnWord> FetchByWordPartOfSpeechIdAsync(int id);
+		Task<IEnumerable<LearnWord>> FetchByUserId(int userId);
 	}
 }
