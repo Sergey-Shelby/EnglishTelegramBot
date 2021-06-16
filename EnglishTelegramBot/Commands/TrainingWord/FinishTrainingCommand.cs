@@ -26,9 +26,13 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
-            
-                await _dispatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
+
+            await _dispatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
+
+            if (state.Details.TrainingSetType == TrainingSetType.Training)
+            {
                 await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
+            }
 
             var listWrongWords = state.Details.WordTrainings
                 .Where(x => x.InputEnglish == false || x.EnglishSelect == false || x.RussianSelect == false)
@@ -43,7 +47,8 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             var procent = Math.Truncate(sumCount / (3 * state.Details.WordTrainings.Count()) * 100);
 
             var messageList = new StringBuilder();
-            messageList.Append($"Тренировка завершена!\nРезультат — {procent}%\n");
+            var message = state.Details.TrainingSetType == TrainingSetType.Training ? $"Тренировка завершена!" : "Тест завершен!";
+            messageList.Append($"{message}\nРезультат — {procent}%\n");
 
             if (procent < 100)
             {

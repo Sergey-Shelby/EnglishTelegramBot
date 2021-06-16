@@ -26,7 +26,7 @@ namespace EnglishTelegramBot.Commands
 
 			//TODO: edit
 
-			wordTrainingSets.ForEach(x => statList.AppendLine($"{x.Name} [{x.CreatedDate}] — {x.WordTraining.Where(x => x.RussianSelect == true).Count() / x.WordTraining.Count() * 100}%"));
+			wordTrainingSets.ForEach(x => statList.AppendLine($"{x.TrainingType} [{x.CreatedDate}] — {x.WordTraining.Where(x => x.RussianSelect == true).Count() / x.WordTraining.Count() * 100}%"));
 
 			//var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
 			//var wordTrainings = await _unitOfWork.WordTrainingRepository.FetchAllByUserIdAsync(user.Id);
