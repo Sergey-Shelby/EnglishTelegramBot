@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Telegraf.Net.Abstractions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegraf.Net
@@ -13,8 +14,8 @@ namespace Telegraf.Net
         public User User { get; set; }
         public IServiceProvider Services { get; set; }
         public Update Update { get; set; }
-        public Task<Message> ReplyAsync(string text, IReplyMarkup replyMarkup = null) => 
-            Bot.SendTextMessageAsync(User.Id, text, replyMarkup: replyMarkup);
+        public Task<Message> ReplyAsync(string text, IReplyMarkup replyMarkup = null, ParseMode parseMode = ParseMode.Default) => 
+            Bot.SendTextMessageAsync(User.Id, text, replyMarkup: replyMarkup, parseMode: parseMode);
         public Task<Message> ReplyAsyncWithHtml(string text, IReplyMarkup replyMarkup = null) =>
             Bot.SendTextMessageAsync(User.Id, text, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: replyMarkup);
 
