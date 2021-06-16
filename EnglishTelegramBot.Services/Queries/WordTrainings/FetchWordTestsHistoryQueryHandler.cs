@@ -25,12 +25,12 @@ namespace EnglishTelegramBot.Services.Queries.LearnWords
 
             var list = new List<WordTestsHistory>();
             var wordTrainingSets = await _unitOfWork.WordTrainingSetRepository.FetchFullByUserIdAsync(user.Id);
-            foreach (var wordTrainingSet in wordTrainingSets.Where(x => x.Name == TrainingSetType.FullTest.ToString() || x.Name == TrainingSetType.DictionaryTest.ToString()))
+            foreach (var wordTrainingSet in wordTrainingSets.Where(x => x.TrainingType == TrainingSetType.FullTest || x.TrainingType == TrainingSetType.DictionaryTest))
             {
                 var testHistory = new WordTestsHistory
                 {
                     DateTime = wordTrainingSet.CreatedDate,
-                    TrainingType = Enum.Parse<TrainingSetType>(wordTrainingSet.Name)
+                    TrainingType = wordTrainingSet.TrainingType
                 };
 
                 var countRightInput = wordTrainingSet.WordTraining.Count(x => x.InputEnglish.Value);
