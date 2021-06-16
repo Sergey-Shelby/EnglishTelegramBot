@@ -15,15 +15,13 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace EnglishTelegramBot.Commands
 {
-	public class WordTestLearnCommand : BaseCommand
+	public class DictionaryTestCommand : BaseCommand
     {
         private readonly IStatusProvider _statusProvider;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IDispatcher _dispatcher;
-        public WordTestLearnCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
+        public DictionaryTestCommand(IStatusProvider statusProvider, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
-            _unitOfWork = unitOfWork;
             _dispatcher = dispatcher;
         }
 
@@ -32,7 +30,12 @@ namespace EnglishTelegramBot.Commands
             var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
             await context.PinMessageAsync(message);
 
-            var wordPartOfSpeeches = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForMainTestQuery());
+            var wordPartOfSpeeches = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForFullTestQuery());
+            if (wordPartOfSpeeches.Count() < 5)
+            {
+                await context.ReplyAsync("Недостаточно слов для проходения теста.");
+                return;
+            }
 
             //TODO: Next part of method repeat in each type training.
             //Bad practice
@@ -40,7 +43,7 @@ namespace EnglishTelegramBot.Commands
             var createWordTrainingSetCommand = new CreateWordTrainingCommand
             {
                 WordsPartOfSpeech = wordPartOfSpeeches,
-                TrainingType = TrainingSetType.TestLearn
+                TrainingType = TrainingSetType.DictionaryTest
             };
             var setId = await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
 
@@ -51,7 +54,7 @@ namespace EnglishTelegramBot.Commands
                     WordPartOfSpeech = x,
                     WordTrainingSetId = setId
                 }).ToList(),
-                TrainingSetType = TrainingSetType.TestLearn
+                TrainingSetType = TrainingSetType.DictionaryTest
             };
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
 
