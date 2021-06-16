@@ -2,6 +2,7 @@
 using EnglishTelegramBot.DomainCore.Entities;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.DomainCore.Models.WordPartOfSpeeches;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,9 +27,9 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
             var learnWords = await _unitOfWork.LearnWordRepository.FetchByUserId(user.Id);
 
             var wordPartOfSpeeches = allWordPartOfSpeeches
-                 //.Where(x => !learnWords.Any(y => y.WordPartOfSpeechId == x.Id && y.Level >= 1))
-                 //.OrderBy(x=> Guid.NewGuid())
-                 .Take(2);
+				 //.Where(x => !learnWords.Any(y => y.WordPartOfSpeechId == x.Id && y.Level >= 1))
+				 .OrderBy(x => Guid.NewGuid())
+				 .Take(10);
 
             return wordPartOfSpeeches;
         }

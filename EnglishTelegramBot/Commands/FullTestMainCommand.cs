@@ -39,24 +39,6 @@ namespace EnglishTelegramBot.Commands
             var createWordTraining = new CreateWordTraining(context, wordPartOfSpeeches, _dispatcher, _statusProvider);
             await createWordTraining.Execute(TrainingSetType.FullTest);
 
-            //var createWordTrainingSetCommand = new CreateWordTrainingCommand
-            //{
-            //    WordsPartOfSpeech = wordPartOfSpeeches,
-            //    TrainingType = TrainingSetType.FullTest
-            //};
-            //var setId = await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
-
-            //var wordTrainingState = new WordTrainingState
-            //{
-            //    WordTrainings = wordPartOfSpeeches.Select(x => new WordTraining
-            //    {
-            //        WordPartOfSpeech = x,
-            //        WordTrainingSetId = setId
-            //    }).ToList(),
-            //    TrainingSetType = TrainingSetType.FullTest
-            //};
-            //_statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
-
             await next(context);
         }
     }

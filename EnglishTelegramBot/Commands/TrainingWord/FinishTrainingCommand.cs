@@ -53,7 +53,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
             if (procent < 100)
             {
                 messageList.Append($"Повторите следующие слова:\n");
-                listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word} — {x.WordPartOfSpeech.Word.RussianWord}</i>"));
+                listWrongWords.ForEach(x => messageList.AppendLine($"<i>{x.WordPartOfSpeech.Word.EnglishWord} — {x.WordPartOfSpeech.WordPartOfSpeechDatas[0].Word}</i>"));
             }
 
             await context.ReplyAsyncWithHtml($"{messageList}");
