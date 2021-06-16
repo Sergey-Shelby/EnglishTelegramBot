@@ -61,8 +61,9 @@ namespace EnglishTelegramBot
 				.UseWhen<LearnWordMenuCommand>(When.TextMessageEquals(Message.LEARN_WORD))
 				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_NEW_WORDS))
 				.UseWhen<LearnWordRepeatCommand>(When.TextMessageContains(Message.REPEAT_LEARN))
-				.UseWhen<WordTestCommand>(When.TextMessageEquals(Message.TEST_WORD))
-
+				.UseWhen<WordTestMenuCommand>(When.TextMessageEquals(Message.TEST_WORD))
+				.UseWhen<WordTestMainCommand>(When.TextMessageEquals(Message.MAIN_TEST_WORD))
+				.UseWhen<WordTestLearnCommand>(When.TextMessageEquals(Message.LEARN_TEST_WORD))
 				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
 				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
 				.UseWhen<StatisticsCommand>(When.TextMessageEquals(Message.STATISTICS))
