@@ -25,7 +25,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
             //var wordPartOfSpeeches = command.WordsPartOfSpeech.Where(p => !learnWordsPartOfSpeechIds.Contains(p.Id));
             var wordTrainingSet = new WordTrainingSet
             {
-                Name = command.TrainingType.ToString(),
+                TrainingType = command.TrainingType,
                 CreatedDate = DateTime.Now,
                 UserId = user.Id
             };
