@@ -40,23 +40,27 @@ namespace EnglishTelegramBot.Commands
             //TODO: Next part of method repeat in each type training.
             //Bad practice
             //Replace In SQRC ? but we change status -_-
-            var createWordTrainingSetCommand = new CreateWordTrainingCommand
-            {
-                WordsPartOfSpeech = wordPartOfSpeeches,
-                TrainingType = TrainingSetType.DictionaryTest
-            };
-            var setId = await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
 
-            var wordTrainingState = new WordTrainingState
-            {
-                WordTrainings = wordPartOfSpeeches.Select(x => new WordTraining
-                {
-                    WordPartOfSpeech = x,
-                    WordTrainingSetId = setId
-                }).ToList(),
-                TrainingSetType = TrainingSetType.DictionaryTest
-            };
-            _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
+            var createWordTraining = new CreateWordTraining(context, wordPartOfSpeeches, _dispatcher, _statusProvider);
+            await createWordTraining.Execute(TrainingSetType.DictionaryTest);
+
+            //var createWordTrainingSetCommand = new CreateWordTrainingCommand
+            //{
+            //    WordsPartOfSpeech = wordPartOfSpeeches,
+            //    TrainingType = TrainingSetType.DictionaryTest
+            //};
+            //var setId = await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
+
+            //var wordTrainingState = new WordTrainingState
+            //{
+            //    WordTrainings = wordPartOfSpeeches.Select(x => new WordTraining
+            //    {
+            //        WordPartOfSpeech = x,
+            //        WordTrainingSetId = setId
+            //    }).ToList(),
+            //    TrainingSetType = TrainingSetType.DictionaryTest
+            //};
+            //_statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
 
             await next(context);
         }
