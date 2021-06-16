@@ -2,49 +2,36 @@
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Commands;
-using EnglishTelegramBot.DomainCore.Abstractions;
-using System.Linq;
 using System.Text;
+using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.LearnWords;
+using Telegram.Bot.Types.Enums;
 
 namespace EnglishTelegramBot.Commands
 {
 	public class StatisticsCommand : BaseCommand
     {
-        private IUnitOfWork _unitOfWork;
-        public StatisticsCommand(IUnitOfWork unitOfWork)
+        private readonly IDispatcher _dispatcher;
+        public StatisticsCommand(IDispatcher dispatcher)
         {
-            _unitOfWork = unitOfWork;
+			_dispatcher = dispatcher;
         }
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
+            var statistic = await _dispatcher.Dispatch<StatisticLearnWord>(new FetchStatisticLearnWordsQuery());
 
-            var wordTrainingSets = await _unitOfWork.WordTrainingSetRepository.FetchAllByUserIdAsync(user.Id);
+			var learnedWordsPercent = (double)statistic.LearnedWordsCount / (statistic.NewWordsCount + statistic.WordsOnRepeatCount) * 100;
+			var wordsOnRepeatPercent = (double)statistic.WordsOnRepeatCount / (statistic.NewWordsCount + statistic.LearnedWordsCount) * 100;
+			var newWordsCountPercent = (double)statistic.NewWordsCount / (statistic.WordsOnRepeatCount + statistic.LearnedWordsCount) * 100;
 
-            var statList = new StringBuilder();
+			var messageText = new StringBuilder();
+			messageText.AppendLine("*Статистика изучения слов:*");
+			messageText.AppendLine($"Изученных слов: {statistic.LearnedWordsCount} ({learnedWordsPercent.ToString("0")}%)");
+			messageText.AppendLine($"Слов на повторе: {statistic.WordsOnRepeatCount} ({wordsOnRepeatPercent.ToString("0")}%)");
+			messageText.AppendLine($"Неизученных слов: {statistic.NewWordsCount} ({newWordsCountPercent.ToString("0")}%)");
 
-			//TODO: edit
-
-			wordTrainingSets.ForEach(x => statList.AppendLine($"{x.TrainingType} [{x.CreatedDate}] — {x.WordTraining.Where(x => x.RussianSelect == true).Count() / x.WordTraining.Count() * 100}%"));
-
-			//var user = await _unitOfWork.UserRepository.FetchByTelegramId(context.User.Id);
-			//var wordTrainings = await _unitOfWork.WordTrainingRepository.FetchAllByUserIdAsync(user.Id);
-			//var listWordTrainings = wordTrainings
-			//    .GroupBy(x => x.Word.EnglishWord)
-			//    .Select(x => new 
-			//    { 
-			//        Word = x.Key, 
-			//        CountTrue = x.Count(y => y.Result == true), 
-			//        CountFalse = x.Count(z => z.Result == false)
-			//    })
-			//    .OrderByDescending(z => z.CountTrue + z.CountFalse)
-			//    .ThenByDescending(o => o.CountTrue).ToList();
-
-			//var wordList = new StringBuilder();
-			//listWordTrainings.ForEach(x => wordList.AppendLine($"{x.Word}: ✅ — { x.CountTrue}, ❌ {x.CountFalse}."));
-
-			await context.ReplyAsync($"Cтатистика:\n{statList}");
+			await context.ReplyAsync(messageText.ToString(), parseMode: ParseMode.Markdown);
         }
 	}
 }
