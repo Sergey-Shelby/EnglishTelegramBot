@@ -27,7 +27,7 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
             var wodrsPartOfSpeechForRepeatIds = learnWords
 				.Where(x => x.Level >= 1 && x.Level <3 && x.NextLevelDate != null)
 				.OrderBy(x => x.NextLevelDate)
-				.Take(2)
+				.Take(5)
                 .Select(x => x.WordPartOfSpeechId);
 
             var allWordPartOfSpeeches = await _unitOfWork.WordPartOfSpeechRepository.FetchAllFullAsync();

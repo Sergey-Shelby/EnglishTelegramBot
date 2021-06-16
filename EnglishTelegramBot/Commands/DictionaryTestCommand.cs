@@ -27,9 +27,6 @@ namespace EnglishTelegramBot.Commands
 
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
-            var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
-            await context.PinMessageAsync(message);
-
             var wordPartOfSpeeches = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForFullTestQuery());
             if (wordPartOfSpeeches.Count() < 5)
             {
@@ -37,30 +34,15 @@ namespace EnglishTelegramBot.Commands
                 return;
             }
 
+            var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
+            await context.PinMessageAsync(message);
+
             //TODO: Next part of method repeat in each type training.
             //Bad practice
             //Replace In SQRC ? but we change status -_-
 
             var createWordTraining = new CreateWordTraining(context, wordPartOfSpeeches, _dispatcher, _statusProvider);
             await createWordTraining.Execute(TrainingSetType.DictionaryTest);
-
-            //var createWordTrainingSetCommand = new CreateWordTrainingCommand
-            //{
-            //    WordsPartOfSpeech = wordPartOfSpeeches,
-            //    TrainingType = TrainingSetType.DictionaryTest
-            //};
-            //var setId = await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
-
-            //var wordTrainingState = new WordTrainingState
-            //{
-            //    WordTrainings = wordPartOfSpeeches.Select(x => new WordTraining
-            //    {
-            //        WordPartOfSpeech = x,
-            //        WordTrainingSetId = setId
-            //    }).ToList(),
-            //    TrainingSetType = TrainingSetType.DictionaryTest
-            //};
-            //_statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
 
             await next(context);
         }
