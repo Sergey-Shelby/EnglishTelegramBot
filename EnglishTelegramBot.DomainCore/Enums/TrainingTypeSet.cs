@@ -2,9 +2,8 @@
 {
     public enum TrainingSetType
     {
-        Test10,
         Training,
-        TestMain,
-        TestLearn
+		FullTest,
+		DictionaryTest
     }
 }

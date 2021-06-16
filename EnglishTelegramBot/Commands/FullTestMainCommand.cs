@@ -15,12 +15,12 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace EnglishTelegramBot.Commands
 {
-	public class WordTestMainCommand : BaseCommand
+	public class FullTestMainCommand : BaseCommand
     {
         private readonly IStatusProvider _statusProvider;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDispatcher _dispatcher;
-        public WordTestMainCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
+        public FullTestMainCommand(IStatusProvider statusProvider, IUnitOfWork unitOfWork, IDispatcher dispatcher)
         {
             _statusProvider = statusProvider;
             _unitOfWork = unitOfWork;
@@ -32,7 +32,7 @@ namespace EnglishTelegramBot.Commands
             var message = await context.ReplyAsync("Тренеровка слов запущена 🖋\nОтправьте !stop для завершения 🏁");
             await context.PinMessageAsync(message);
 
-            var wordPartOfSpeeches = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForMainTestQuery()); 
+            var wordPartOfSpeeches = await _dispatcher.Dispatch<IEnumerable<WordPartOfSpeech>>(new FetchWordPartOfSpeechForFullTestQuery());
 
             //TODO: Next part of method repeat in each type training.
             //Bad practice
@@ -40,7 +40,7 @@ namespace EnglishTelegramBot.Commands
             var createWordTrainingSetCommand = new CreateWordTrainingCommand
             {
                 WordsPartOfSpeech = wordPartOfSpeeches,
-                TrainingType = TrainingSetType.TestMain
+                TrainingType = TrainingSetType.FullTest
             };
             var setId = await _dispatcher.Dispatch<int>(createWordTrainingSetCommand);
 
@@ -51,7 +51,7 @@ namespace EnglishTelegramBot.Commands
                     WordPartOfSpeech = x,
                     WordTrainingSetId = setId
                 }).ToList(),
-                TrainingSetType = TrainingSetType.TestMain
+                TrainingSetType = TrainingSetType.FullTest
             };
             _statusProvider.SetStatus(context.User.Id, Status.LEARN_WORD, wordTrainingState);
 

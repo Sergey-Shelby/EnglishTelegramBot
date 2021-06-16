@@ -2,7 +2,7 @@
 
 namespace EnglishTelegramBot.DomainCore.Models.WordPartOfSpeeches
 {
-	public class FetchWordPartOfSpeechForMainTestQuery : IQuery
+	public class FetchWordPartOfSpeechForDictionaryTestQuery : IQuery
 	{
 	}
 }
