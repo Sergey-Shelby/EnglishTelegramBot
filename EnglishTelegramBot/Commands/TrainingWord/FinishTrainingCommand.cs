@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Telegraf.Net;
 using Telegraf.Net.Abstractions;
 using Telegraf.Net.Commands;
+using EnglishTelegramBot.DomainCore.Enums;
 
 namespace EnglishTelegramBot.Commands.TrainingWord
 {
@@ -25,9 +26,9 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
         {
             var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
-
-            await _dispatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
-            await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
+            
+                await _dispatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
+                await _dispatcher.Dispatch(new CreateLearnWordCommand { WordTrainings = state.Details.WordTrainings });
 
             var listWrongWords = state.Details.WordTrainings
                 .Where(x => x.InputEnglish == false || x.EnglishSelect == false || x.RussianSelect == false)
