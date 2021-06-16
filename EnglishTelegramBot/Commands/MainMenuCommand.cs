@@ -30,10 +30,6 @@ namespace EnglishTelegramBot.Commands
                     },
                     new KeyboardButton[]
                     {
-                        Message.USERS
-                    },
-                    new KeyboardButton[]
-                    {
                         Message.STATISTICS
                     }
                 }

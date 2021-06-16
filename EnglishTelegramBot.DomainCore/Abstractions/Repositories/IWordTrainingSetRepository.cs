@@ -6,7 +6,6 @@ namespace EnglishTelegramBot.DomainCore.Abstractions.Repositories
 {
 	public interface IWordTrainingSetRepository : IBaseRepository<WordTrainingSet>
 	{
-		Task<List<WordTrainingSet>> FetchAllByUserIdAsync(int userId);
-		Task<WordTrainingSet> FetchLastByUserId(int userId);
+		Task<List<WordTrainingSet>> FetchFullByUserIdAsync(int userId);
 	}
 }

@@ -16,16 +16,9 @@ namespace EnglishTelegramBot.Database.Repositories
 			_dbset = englishContext.Set<WordTrainingSet>();
 		}
 
-		public async Task<List<WordTrainingSet>> FetchAllByUserIdAsync(int userId)
+		public async Task<List<WordTrainingSet>> FetchFullByUserIdAsync(int userId)
 		{
 			return await _dbset.Where(x => x.UserId == userId).Include(y => y.WordTraining).ToListAsync();
-
-			//return await _dbset.Where(x => x.UserId == userId).Include(x => x.Word).ToListAsync();
-			//throw new System.Exception();
-		}
-		public async Task<WordTrainingSet> FetchLastByUserId(int userId)
-		{
-			return await _dbset.Where(x => x.UserId == userId).OrderByDescending(p => p.CreatedDate).FirstOrDefaultAsync();
 		}
 	}
 }
