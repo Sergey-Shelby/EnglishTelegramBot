@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
 {
-	public class FetchWordPartOfSpeechForLearnTestQueryHandler : IQueryHandler<FetchWordPartOfSpeechForLearnTestQuery, IEnumerable<WordPartOfSpeech>>
+	public class FetchWordPartOfSpeechForDictionaryTestQueryHandler : IQueryHandler<FetchWordPartOfSpeechForDictionaryTestQuery, IEnumerable<WordPartOfSpeech>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserManager _userManager;
-        public FetchWordPartOfSpeechForLearnTestQueryHandler(IUnitOfWork unitOfWork, IUserManager userManager)
+        public FetchWordPartOfSpeechForDictionaryTestQueryHandler(IUnitOfWork unitOfWork, IUserManager userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
         }
 
-        public async Task<IEnumerable<WordPartOfSpeech>> Handle(FetchWordPartOfSpeechForLearnTestQuery query)
+        public async Task<IEnumerable<WordPartOfSpeech>> Handle(FetchWordPartOfSpeechForDictionaryTestQuery query)
         {
             var user = await _userManager.FetchCurrentUserAsync();
 
