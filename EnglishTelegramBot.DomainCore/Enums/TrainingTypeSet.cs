@@ -3,6 +3,8 @@
     public enum TrainingSetType
     {
         Test10,
-        Training
+        Training,
+        TestMain,
+        TestLearn
     }
 }
