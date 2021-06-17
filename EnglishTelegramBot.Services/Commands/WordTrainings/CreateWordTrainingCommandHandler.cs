@@ -21,8 +21,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
         public async Task<int> Handle(CreateWordTrainingCommand command)
         {
             var user = await _userManager.FetchCurrentUserAsync();
-            //var learnWordsPartOfSpeechIds = await _unitOfWork.LearnWordRepository.FetchWordPartOfSpeechNotInRepeat(user.Id);
-            //var wordPartOfSpeeches = command.WordsPartOfSpeech.Where(p => !learnWordsPartOfSpeechIds.Contains(p.Id));
+
             var wordTrainingSet = new WordTrainingSet
             {
                 TrainingType = command.TrainingType,

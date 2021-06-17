@@ -1,4 +1,5 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
+using EnglishTelegramBot.DomainCore.Consts;
 using EnglishTelegramBot.DomainCore.Entities;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.DomainCore.Models.WordPartOfSpeeches;
@@ -27,8 +28,9 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
             var wodrsPartOfSpeechForRepeatIds = learnWords
 				.Where(x => x.Level >= 1 && x.Level <3 && x.NextLevelDate != null)
 				.OrderBy(x => x.NextLevelDate)
-				.Take(5)
-                .Select(x => x.WordPartOfSpeechId);
+				.Take(Parameters.COUNT_WORD_FOR_TRAINING)
+                .Select(x => x.WordPartOfSpeechId)
+                .ToList();
 
             var allWordPartOfSpeeches = await _unitOfWork.WordPartOfSpeechRepository.FetchAllFullAsync();
             var wodrsPartOfSpeechForRepeat = allWordPartOfSpeeches.Where(x => wodrsPartOfSpeechForRepeatIds.Contains(x.Id));

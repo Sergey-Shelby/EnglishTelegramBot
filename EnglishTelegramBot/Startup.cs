@@ -17,6 +17,11 @@ using EnglishTelegramBot.Services;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.Providers;
 using EnglishTelegramBot.DomainCore.Enums;
+using System.Threading.Tasks;
+using System;
+using System.Net;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace EnglishTelegramBot
 {
@@ -38,7 +43,8 @@ namespace EnglishTelegramBot
 			services.AddScoped<IContextPrincipal, ContextPrincipal>();
 			services.Configure<BotOptions>(_configuration.GetSection("BotOptions"));
 			services.AddSingleton<IStatusProvider>(x => new StatusProvider());
-			services.AddScoped<IUnitOfWork>(x => new UnitOfWork(new EnglishContext()));
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddDbContext<EnglishContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MainDb")));
 			services.AddCommands();
 		}
 
@@ -54,6 +60,7 @@ namespace EnglishTelegramBot
 			});
 
 			app.UseTelegramBotLongPolling(ConfigureBot());
+			new SiteWaiter().Run();
 		}
 
 		public IBotBuilder ConfigureBot() =>
@@ -84,6 +91,32 @@ namespace EnglishTelegramBot
 					.UseWhen<TrainingInputTypeCommand>(When.HasTrainingType(x => x == TrainingType.Input))
 					.Use<FinishTrainingCommand>()
 						.Use<MainMenuCommand>());
+	}
+
+	public class SiteWaiter
+	{
+		public void Run()
+		{
+			Task.Run(async () =>
+			{
+				while (true)
+				{
+					await Task.Delay(TimeSpan.FromMinutes(3));
+					string html = string.Empty;
+					string url = @"http://u1405994.plsk.regruhosting.ru";
+
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+					request.AutomaticDecompression = DecompressionMethods.GZip;
+
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					using (Stream stream = response.GetResponseStream())
+					using (StreamReader reader = new StreamReader(stream))
+					{
+						html = reader.ReadToEnd();
+					}
+				}
+			});
+		}
 	}
 }
 

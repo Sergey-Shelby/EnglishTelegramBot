@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/EnglishTelegramBot/.config
+/EnglishTelegramBot/appsettings.production.json
+/EnglishTelegramBot/appsettings.production.Development.json

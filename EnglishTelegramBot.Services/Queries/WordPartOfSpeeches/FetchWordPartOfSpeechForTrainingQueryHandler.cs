@@ -1,7 +1,9 @@
 ﻿using EnglishTelegramBot.DomainCore.Abstractions;
+using EnglishTelegramBot.DomainCore.Consts;
 using EnglishTelegramBot.DomainCore.Entities;
 using EnglishTelegramBot.DomainCore.Framework;
 using EnglishTelegramBot.DomainCore.Models.WordPartOfSpeeches;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,8 +29,9 @@ namespace EnglishTelegramBot.Services.Queries.WordPartOfSpeeches
 
            var wordPartOfSpeeches = allWordPartOfSpeeches
                 .Where(x => !learnWords.Any(y => y.WordPartOfSpeechId == x.Id && y.Level >= 1))
-                //.OrderBy(x=> Guid.NewGuid())
-                .Take(2);
+                .OrderBy(x=> Guid.NewGuid())
+                .Take(Parameters.COUNT_WORD_FOR_TRAINING)
+                .ToList();
 
             return wordPartOfSpeeches;
         }
