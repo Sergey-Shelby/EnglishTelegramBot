@@ -27,6 +27,16 @@ namespace EnglishTelegramBot.Commands.TrainingWord
         {
             var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
 
+            //TODO: Update logic
+            if (context.Update.Message.Text == "!stop")
+            {
+                await context.ReplyAsyncWithHtml("Тренеровка была остановлена!");
+                await context.UnpinMessageAsync();
+                _statusProvider.ClearStatus(context.User.Id);
+                await next(context);
+                return;
+            }
+
             await _dispatcher.Dispatch(new UpdateWordTrainingCommand { WordTrainings = state.Details.WordTrainings });
 
             if (state.Details.TrainingSetType == TrainingSetType.Training)

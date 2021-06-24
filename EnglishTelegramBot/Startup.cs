@@ -24,6 +24,7 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegraf.Net.ASP.NET_Core;
+using Microsoft.Extensions.Hosting;
 
 namespace EnglishTelegramBot
 {
@@ -68,9 +69,15 @@ namespace EnglishTelegramBot
 				});
 			});
 
-			//app.UseTelegramBotLongPolling(ConfigureBot());
-			app.UseTelegramBotWebhook(ConfigureBot());
-			new SiteWaiter().Run();
+			if (env.IsDevelopment())
+			{
+				app.UseTelegramBotLongPolling(ConfigureBot());
+			}
+            else
+			{
+				app.UseTelegramBotWebhook(ConfigureBot());
+				new SiteWaiter().Run();
+			}
 		}
 
 		public IBotBuilder ConfigureBot() =>
