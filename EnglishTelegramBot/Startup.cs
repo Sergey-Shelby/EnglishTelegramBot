@@ -22,26 +22,35 @@ using System;
 using System.Net;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Telegram.Bot;
+using Telegraf.Net.ASP.NET_Core;
 
 namespace EnglishTelegramBot
 {
 	public class Startup
 	{
+		private readonly BotConfiguration _botConfig;
 		private readonly IConfiguration _configuration;
 		public static Assembly DomainAssembly => typeof(Dispatcher).Assembly;
 
 		public Startup(IConfiguration configuration)
 		{
 			_configuration = configuration;
+			_botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
 		}
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddHostedService<ConfigureWebhook>();
+
+			services.AddHttpClient("tgwebhook")
+					.AddTypedClient<ITelegramBotClient>(httpClient => new TelegramBotClient(_botConfig.BotToken, httpClient));
+
 			services.AddScopedHandlers(DomainAssembly);
 			services.AddScoped<IDispatcher, Dispatcher>();
 			services.AddScoped<IUserManager, UserManager>();
 			services.AddScoped<IContextPrincipal, ContextPrincipal>();
-			services.Configure<BotOptions>(_configuration.GetSection("BotOptions"));
+			services.Configure<BotConfiguration>(_configuration.GetSection("BotConfiguration"));
 			services.AddSingleton<IStatusProvider>(x => new StatusProvider());
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddDbContext<EnglishContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MainDb")));
@@ -59,7 +68,8 @@ namespace EnglishTelegramBot
 				});
 			});
 
-			app.UseTelegramBotLongPolling(ConfigureBot());
+			//app.UseTelegramBotLongPolling(ConfigureBot());
+			app.UseTelegramBotWebhook(ConfigureBot());
 			new SiteWaiter().Run();
 		}
 
@@ -101,19 +111,18 @@ namespace EnglishTelegramBot
 			{
 				while (true)
 				{
-					await Task.Delay(TimeSpan.FromMinutes(3));
-					string html = string.Empty;
-					string url = @"http://u1405994.plsk.regruhosting.ru";
-
-					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-					request.AutomaticDecompression = DecompressionMethods.GZip;
-
-					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-					using (Stream stream = response.GetResponseStream())
-					using (StreamReader reader = new StreamReader(stream))
+					try
 					{
-						html = reader.ReadToEnd();
+						await Task.Delay(TimeSpan.FromMinutes(1));
+						string html = string.Empty;
+						string url = @"https://tg-bots.site";
+
+						HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+						request.AutomaticDecompression = DecompressionMethods.GZip;
+
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse());
 					}
+                    catch {}
 				}
 			});
 		}
