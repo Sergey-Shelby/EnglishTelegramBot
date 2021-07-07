@@ -1,5 +1,6 @@
 ﻿using EnglishTelegramBot.DomainCore.Enums;
 using EnglishTelegramBot.DomainCore.Framework;
+using EnglishTelegramBot.DomainCore.Models.WordTrainings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace EnglishTelegramBot.Commands.TrainingWord
 		public override async Task ExecuteAsync(TelegrafContext context, UpdateDelegate next)
 		{
 			var state = _statusProvider.GetStatus<WordTrainingState>(context.User.Id);
+			await _dispatcher.Dispatch(new DeleteWordTrainingCommand { WordTrainingSetId = state.Details.WordTrainings.First().WordTrainingSetId });
 			var message = state.Details.TrainingSetType == TrainingSetType.Training ? $"Тренировка завершена!" : "Тест завершен!";
 			await context.ReplyAsyncWithHtml($"{message}");
 			await context.UnpinMessageAsync();
