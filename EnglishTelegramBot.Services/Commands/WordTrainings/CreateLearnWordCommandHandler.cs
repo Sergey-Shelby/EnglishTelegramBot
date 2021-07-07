@@ -75,7 +75,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
             var necessaryProgress = learnWord.Level + 1;
             if (learnWord.SelectRus >= necessaryProgress && learnWord.SelectRus >= necessaryProgress && learnWord.Input >= necessaryProgress)
             {
-                learnWord.NextLevelDate = DateTime.Now.AddMinutes(3);
+                learnWord.NextLevelDate = DateTime.Now.AddDays(2);
                 learnWord.Level++;
             }
         }

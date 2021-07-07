@@ -16,14 +16,13 @@ namespace EnglishTelegramBot.Database.Common
         public DbSet<WordTrainingSet> WordTrainingSet { get; set; }
         public DbSet<LearnWord> LearnWord { get; set; }
 
-        public EnglishContext()
+        public EnglishContext(DbContextOptions<EnglishContext> options): base(options)
         {
             Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("workstation id=EnglishDB.mssql.somee.com;packet size=4096;user id=SergeyShelby_SQLLogin_2;pwd=f8f29t4bkb;data source=EnglishDB.mssql.somee.com;persist security info=False;initial catalog=EnglishDB");
         }
     }
 }

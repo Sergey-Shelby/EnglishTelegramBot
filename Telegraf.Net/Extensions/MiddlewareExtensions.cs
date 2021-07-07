@@ -19,11 +19,11 @@ namespace Telegraf.Net.Extensions
             IBotBuilder botBuilder,
             CancellationToken cancellationToken = default)
         {
-            var options = app.ApplicationServices.GetRequiredService<IOptions<BotOptions>>();
+            var options = app.ApplicationServices.GetRequiredService<IOptions<BotConfiguration>>();
 
             var updateDelegate = botBuilder.Build();
 
-            var telegrafBot = new TelegrafClient(options.Value.ApiToken);
+            var telegrafBot = new TelegrafClient(options.Value.BotToken);
 
             Task.Run(async () =>
             {
@@ -44,14 +44,15 @@ namespace Telegraf.Net.Extensions
 
                     foreach (var update in updates)
                     {
+                        //TODO: Update to single with webhook
                         using var scopeProvider = app.ApplicationServices.CreateScope();
                         {
                             try
                             {
                                 var contextPrincipal = (IContextPrincipal)scopeProvider.ServiceProvider.GetService(typeof(IContextPrincipal));
                                 contextPrincipal.TelegramUserId = update?.Message?.From?.Id ?? default;
-
                                 var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
+
                                 await updateDelegate(context).ConfigureAwait(false);
                             }
                             catch (Exception e)
@@ -78,5 +79,9 @@ namespace Telegraf.Net.Extensions
             });
             return app;
         }
+
+
+
+
     }
 }
