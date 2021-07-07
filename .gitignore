@@ -341,3 +341,7 @@ healthchecksdb
 /EnglishTelegramBot/.config
 /EnglishTelegramBot/appsettings.production.json
 /EnglishTelegramBot/appsettings.production.Development.json
+healthchecksdb
+/EnglishTelegramBot/appsettings.production.json
+/EnglishTelegramBot/appsettings.json
+/EnglishTelegramBot/.config/dotnet-tools.json
