@@ -31,6 +31,8 @@ namespace EnglishTelegramBot.Commands
 			var wordsOnRepeatPercent = (double)statistic.WordsOnRepeatCount / fullCount * 100;
 			var newWordsCountPercent = (double)statistic.NewWordsCount / fullCount * 100;
 
+			Serilog.Log.Information("Stat.");
+
 			var messageText = new StringBuilder();
 			messageText.AppendLine("*Статистика изучения слов:*");
 			messageText.AppendLine($"Изученных слов: {statistic.LearnedWordsCount} ({learnedWordsPercent.ToString("0")}%)");
