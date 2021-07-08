@@ -21,6 +21,7 @@ namespace EnglishTelegramBot.Services.Commands.WordTrainings
 				await _unitOfWork.WordTrainingRepository.DeleteAsync(wordTraining.Id);
 			}
 			await _unitOfWork.WordTrainingSetRepository.DeleteAsync(command.WordTrainingSetId);
+			await _unitOfWork.SaveChangesAsync();
 		}
 	}
 }

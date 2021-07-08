@@ -36,43 +36,51 @@ namespace Telegraf.Net.Extensions
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    Update[] updates = await telegrafBot.Client.MakeRequestAsync(
-                    requestParams,
-                    cancellationToken
-                    ).ConfigureAwait(false);
-
-
-                    foreach (var update in updates)
+                    try
                     {
-                        //TODO: Update to single with webhook
-                        using var scopeProvider = app.ApplicationServices.CreateScope();
+                        Update[] updates = await telegrafBot.Client.MakeRequestAsync(
+                        requestParams,
+                        cancellationToken
+                        ).ConfigureAwait(false);
+
+                        foreach (var update in updates)
                         {
-                            try
+                            //TODO: Update to single with webhook
+                            using var scopeProvider = app.ApplicationServices.CreateScope();
                             {
-                                var contextPrincipal = (IContextPrincipal)scopeProvider.ServiceProvider.GetService(typeof(IContextPrincipal));
-                                contextPrincipal.TelegramUserId = update?.Message?.From?.Id ?? default;
-                                var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
-
-                                await updateDelegate(context).ConfigureAwait(false);
-                            }
-                            catch (Exception e)
-                            {
-                                await ExceptionLogger.PrintAsync($"⌛️ {DateTime.Now}");
-                                await ExceptionLogger.PrintAsync($"📍 Base exception:\n*{e.Message}*\n{e.StackTrace}");
-                                if (e.InnerException != null)
+                                try
                                 {
-                                    await ExceptionLogger.PrintAsync($"📍 Inner exception:\n*{e.InnerException.Message}*\n{e.InnerException.StackTrace}");
-                                }
+                                    var contextPrincipal = (IContextPrincipal)scopeProvider.ServiceProvider.GetService(typeof(IContextPrincipal));
+                                    contextPrincipal.TelegramUserId = update?.Message?.From?.Id ?? default;
+                                    var context = new TelegrafContext(telegrafBot.Client, update, scopeProvider.ServiceProvider);
 
-                                await ExceptionLogger.PrintSticker();
+                                    await updateDelegate(context).ConfigureAwait(false);
+                                }
+                                catch (Exception e)
+                                {
+                                    await ExceptionLogger.PrintAsync($"⌛️ {DateTime.Now}");
+                                    await ExceptionLogger.PrintAsync($"📍 Base exception:\n*{e.Message}*\n{e.StackTrace}");
+                                    if (e.InnerException != null)
+                                    {
+                                        await ExceptionLogger.PrintAsync($"📍 Inner exception:\n*{e.InnerException.Message}*\n{e.InnerException.StackTrace}");
+                                    }
+
+                                    await ExceptionLogger.PrintSticker();
+                                }
                             }
                         }
+
+                        if (updates.Length > 0)
+                        {
+                            requestParams.Offset = updates[^1].Id + 1;
+                        }
+                    }
+                    catch(Exception e)
+                    {
+
                     }
 
-                    if (updates.Length > 0)
-                    {
-                        requestParams.Offset = updates[^1].Id + 1;
-                    }
+                 
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();

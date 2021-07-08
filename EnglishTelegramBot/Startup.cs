@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegraf.Net.ASP.NET_Core;
 using Microsoft.Extensions.Hosting;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace EnglishTelegramBot
 {
@@ -32,21 +33,26 @@ namespace EnglishTelegramBot
 	{
 		private readonly BotConfiguration _botConfig;
 		private readonly IConfiguration _configuration;
+		private readonly IHostingEnvironment _currentEnvironment;
+
 		public static Assembly DomainAssembly => typeof(Dispatcher).Assembly;
 
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IHostingEnvironment env)
 		{
+			_currentEnvironment = env;
 			_configuration = configuration;
 			_botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
 		}
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddHostedService<ConfigureWebhook>();
+			if (!_currentEnvironment.IsDevelopment())
+			{
+				services.AddHostedService<ConfigureWebhook>();
+			}
 
 			services.AddHttpClient("tgwebhook")
 					.AddTypedClient<ITelegramBotClient>(httpClient => new TelegramBotClient(_botConfig.BotToken, httpClient));
-
 			services.AddScopedHandlers(DomainAssembly);
 			services.AddScoped<IDispatcher, Dispatcher>();
 			services.AddScoped<IUserManager, UserManager>();
@@ -58,7 +64,7 @@ namespace EnglishTelegramBot
 			services.AddCommands();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			app.UseRouting();
 			app.UseEndpoints(endpoints =>
@@ -71,6 +77,10 @@ namespace EnglishTelegramBot
 
 			if (env.IsDevelopment())
 			{
+				using var scope = app.ApplicationServices.CreateScope();
+				var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
+				await botClient.DeleteWebhookAsync();
+
 				app.UseTelegramBotLongPolling(ConfigureBot());
 			}
             else
@@ -82,22 +92,23 @@ namespace EnglishTelegramBot
 
 		public IBotBuilder ConfigureBot() =>
 			new BotBuilder()
-				.UseWhen<LearnWordMenuCommand>(When.TextMessageEquals(Message.LEARN_WORD))
-				.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_NEW_WORDS))
-				.UseWhen<LearnWordRepeatCommand>(When.TextMessageContains(Message.REPEAT_LEARN))
-				.UseWhen<WordTestMenuCommand>(When.TextMessageEquals(Message.TEST_WORD))
-				.UseWhen<FullTestMainCommand>(When.TextMessageEquals(Message.MAIN_TEST_WORD))
-				.UseWhen<DictionaryTestCommand>(When.TextMessageEquals(Message.LEARN_TEST_WORD))
-				.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
-				.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
-				.UseWhen<StatisticsCommand>(When.TextMessageEquals(Message.STATISTICS))
+				.MapWhen(When.HasStatus(null), x => x
+					.UseWhen<LearnWordMenuCommand>(When.TextMessageEquals(Message.LEARN_WORD))
+					.UseWhen<LearnWordCommand>(When.TextMessageEquals(Message.LEARN_NEW_WORDS))
+					.UseWhen<LearnWordRepeatCommand>(When.TextMessageContains(Message.REPEAT_LEARN))
+					.UseWhen<WordTestMenuCommand>(When.TextMessageEquals(Message.TEST_WORD))
+					.UseWhen<FullTestMainCommand>(When.TextMessageEquals(Message.MAIN_TEST_WORD))
+					.UseWhen<DictionaryTestCommand>(When.TextMessageEquals(Message.LEARN_TEST_WORD))
+					.UseWhen<HelpCommand>(When.TextMessageEquals("help"))
+					.UseWhen<UsersCommand>(When.TextMessageEquals(Message.USERS))
+					.UseWhen<StatisticsCommand>(When.TextMessageEquals(Message.STATISTICS))
 
-				.UseWhen<MainMenuCommand>(When.TextMessageEquals(Message.MAIN_MENU))
+					.UseWhen<MainMenuCommand>(When.TextMessageEquals(Message.MAIN_MENU))
 
-				.MapWhen(When.TextMessageContains("start"), x => x
-					.Use<StartCommand>()
-					.Use<MainMenuCommand>())
-
+					.MapWhen(When.TextMessageContains("start"), x => x
+						.Use<StartCommand>()
+						.Use<MainMenuCommand>())
+				)
 				.MapWhen(When.HasStatus(Status.LEARN_WORD), x => x
 					.MapWhen(When.TextMessageEquals("!stop"), x => x//.Or(When.CheckCountWordTraining()), x => x
 						.Use<StopTrainingCommand>()

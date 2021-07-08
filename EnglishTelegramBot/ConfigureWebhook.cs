@@ -33,8 +33,6 @@ namespace EnglishTelegramBot
             var webhookAddress = @$"{_botConfig.HostAddress}/bot/{_botConfig.BotToken}";
             _logger.LogInformation("Setting webhook: ", webhookAddress);
             await botClient.SetWebhookAsync(webhookAddress);
-            var t = await botClient.GetWebhookInfoAsync();
-
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
